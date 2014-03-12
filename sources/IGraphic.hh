@@ -43,12 +43,19 @@ typedef struct {
     State state;
 } Pos;
 
+/*
+** Implement a child class from IGraphic for your graphic library
+** then write a function called "IGraphic *initlib();" returning a new instance of your class
+** Compile it as a shared library and then you can use it with the nibbler project
+*/
+
 class IGraphic {
 public:
     virtual ~IGraphic() = 0;
     virtual void init(int w, int h) = 0;
     virtual Key refresh(std::list<Pos>) = 0;
 };
+
 
 #endif
 
