@@ -38,7 +38,7 @@ $(DOBJ)/%.o :	%.cpp
 
 make :	$(OBJ)
 	@mkdir -p objects
-	@$(CXX) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LINK)
+	@$(CXX) -o $(NAME) $(OBJ) $(CXXFLAG) $(LINK)
 
 clean :
 	@rm -f $(OBJ)
