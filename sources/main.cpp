@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     int width, height;
     std::string graphiclib;
 
-    if (argc != 3)
+    if (argc != 4)
         error(1, 0, "Usage : [width] [height] [graphiclib]");
     width = std::atoi(argv[1]);
     height = std::atoi(argv[2]);
