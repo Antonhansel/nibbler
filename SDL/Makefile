@@ -1,9 +1,9 @@
 ##
 ## Makefile<2> for Makefile in /home/apollo/rendu/OPENGL_TUTO/test1
-## 
+##
 ## Made by ribeaud antonin
 ## Login   <ribeau_a@epitech.net>
-## 
+##
 ## Started on  Mon Mar 10 15:07:46 2014 ribeaud antonin
 ## Last update Thu Mar 13 17:43:55 2014 ribeaud antonin
 ##
@@ -15,11 +15,11 @@ SRCS		=	srcs/snake.cpp \
 
 OBJS		=	$(SRCS:.cpp=.o)
 
-CFLAGS		+=	-lSDL -lSDL_mixer -lSDL_image -fPIC
+CXXFLAGS		+=	-lSDL -lSDL_mixer -lSDL_image -fPIC
 
-LDFLAGS		=	-shared
+LDFLAGS		=	-shared -fPIC
 
-CC		=	g++ -shared
+CC		=	g++
 
 all		:	$(NAME)
 
