@@ -18,7 +18,7 @@ CXXFLAG :=	-W -Wall -Wextra -ldl
 
 CXX = clang++
 
-all :	make
+all :	$(NAME)
 	@mkdir -p objects
 	@echo -e "\033[32m"$(NAME) is up to date!  "\033[0m"
 
@@ -36,7 +36,7 @@ $(DOBJ)/%.o :	%.cpp
 		@$(CXX) $(CXXFLAGS) -o $@ $(LINK) -c $<
 		@echo -e "\033[34mCompile :" $< $(CXXFLAGS) $(LINK) "\033[0m""\033[32m"[OK]"\033[0m"
 
-make :	$(OBJ)
+$(NAME) :	$(OBJ)
 	@mkdir -p objects
 	@$(CXX) -o $(NAME) $(OBJ) $(CXXFLAG) $(LINK)
 
