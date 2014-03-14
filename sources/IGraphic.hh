@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Jan 10 09:07:44 2014 guillaume besson
+// Last update Fri Mar 14 13:22:41 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
@@ -56,6 +56,4 @@ public:
     virtual Key refresh(std::list<Pos>) = 0;
 };
 
-
 #endif
-
