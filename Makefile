@@ -1,49 +1,41 @@
 ##
-## Makefile
+## Makefile for makefile in /home/apollo/rendu/nibbler2/SDL
+## 
+## Made by ribeaud antonin
+## Login   <ribeau_a@epitech.net>
+## 
+## Started on  Fri Mar 14 13:13:43 2014 ribeaud antonin
+## Last update Fri Mar 14 13:18:35 2014 ribeaud antonin
 ##
-## Started on  Thu Mar  6 by Guillaume
-## Update on Thu Mar  6 13:02 by Guillaume
-##
 
-NAME =	nibbler
-DOBJ =	objects
-DSRC =	sources
+NAME_EXE = nibbler
+SRC_EXE = sources/main.cpp \
+	sources/nibbler.cpp \
 
-SRC =	sources/main.cpp \
-		sources/nibbler.cpp
+OBJ_EXE = $(SRC_EXE:.cpp=.o)
 
-OBJ =	$(subst $(DSRC), $(DOBJ), $(SRC))
-OBJ :=	$(OBJ:.cpp=.o)
-CXXFLAG :=	-W -Wall -Wextra -ldl
+NAME_LIB = SDL.so
+SRC_LIB = SDL/srcs/snake.cpp \
 
-CXX = clang++
+OBJ_LIB = $(SRC_LIB:.cpp=.o)
 
-all :	$(NAME)
-	@mkdir -p objects
-	@echo -e "\033[32m"$(NAME) is up to date!  "\033[0m"
+LDFLAGS += -ldl
+CXXFLAGS += -fPIC
 
-%.o :	%.cpp
-	@mkdir -p objects
-	@$(CXX) -o $(DOBJ)/$@ $(CXXFLAGS) $(LINK) -c $<
+CXX = g++
 
-$(DOBJ)/%.o :	$(DSRC)/%.cpp
-		@mkdir -p objects
-		@$(CXX) $(CXXFLAGS) -o $@ $(LINK) -c $<
-		@echo -e "\033[34mCompile :" $< $(CXXFLAGS) $(LINK) "\033[0m""\033[32m"[OK]"\033[0m"
+all: $(NAME_LIB) $(NAME_EXE)
 
-$(DOBJ)/%.o :	%.cpp
-		@mkdir -p objects
-		@$(CXX) $(CXXFLAGS) -o $@ $(LINK) -c $<
-		@echo -e "\033[34mCompile :" $< $(CXXFLAGS) $(LINK) "\033[0m""\033[32m"[OK]"\033[0m"
+$(NAME_EXE): $(OBJ_EXE)
+	$(CXX) -o $(NAME_EXE) $(OBJ_EXE) $(LDFLAGS)
 
-$(NAME) :	$(OBJ)
-	@mkdir -p objects
-	@$(CXX) -o $(NAME) $(OBJ) $(CXXFLAG) $(LINK)
+$(NAME_LIB): $(OBJ_LIB)
+	$(CXX) -shared -o $(NAME_LIB) $(OBJ_LIB)
 
-clean :
-	@rm -f $(OBJ)
+clean:
+	rm -f $(OBJ_LIB) $(OBJ_EXE)
 
-fclean :	clean
-		@rm -f $(NAME)
+fclean: clean
+	rm -f $(NAME_EXE) $(NAME_LIB)
 
-re :	fclean all
+re: fclean all

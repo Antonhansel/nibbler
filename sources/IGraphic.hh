@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Jan 10 09:07:44 2014 guillaume besson
+// Last update Fri Mar 14 13:22:41 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
@@ -14,21 +14,21 @@
 #include <list>
 
 enum State {
-    HEAD_NORTH,
-    HEAD_EAST,
-    HEAD_WEST,
-    HEAD_SOUTH,
-    BODY_HORIZONTAL,
-    BODY_VERTICAL,
-    BODY_ANGLE_NORTH_EAST,
-    BODY_ANGLE_NORTH_WEST,
-    BODY_ANGLE_SOUTH_EAST,
-    BODY_ANGLE_SOUTH_WEST,
-    TAIL_NORTH,
-    TAIL_EAST,
-    TAIL_WEST,
-    TAIL_SOUTH,
-    FOOD
+  HEAD_NORTH,
+  HEAD_EAST,
+  HEAD_WEST,
+  HEAD_SOUTH,
+  BODY_HORIZONTAL,
+  BODY_VERTICAL,
+  BODY_ANGLE_NORTH_EAST,
+  BODY_ANGLE_NORTH_WEST,
+  BODY_ANGLE_SOUTH_EAST,
+  BODY_ANGLE_SOUTH_WEST,
+  TAIL_NORTH,
+  TAIL_EAST,
+  TAIL_WEST,
+  TAIL_SOUTH,
+  FOOD
 };
 
 enum Key {
@@ -56,6 +56,4 @@ public:
     virtual Key refresh(std::list<Pos>) = 0;
 };
 
-
 #endif
-

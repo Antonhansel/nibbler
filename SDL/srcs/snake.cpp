@@ -5,40 +5,18 @@
 // Login   <ribeau_a@epitech.net>
 // 
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 13 17:24:26 2014 ribeaud antonin
+// Last update Fri Mar 14 12:48:22 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
 
-Snake::Snake()
+extern "C"
 {
-  std::string	s1;
-  std::string	s2;
-
-  init_values();
-  s1 = "img/bg.jpg";
-  s2 = "img/wood1.png";
-  SDL_WM_SetCaption("SNAKE", NULL);
-  if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
-    exit(1);
-  _screen = SDL_SetVideoMode(WIDTH, HEIGHT, BPP, SDL_SWSURFACE);
-  _bg = load_image(s1);
-  _wall = load_image(s2);
-  apply_surface(0, 0, _bg, _screen);
-  apply_wall();
-  my_flip();
-  start_snake();
+  IGraphic	*initlib()
+  {
+    return (new Snake());
+  }
 }
-
-Snake::~Snake()
-{
-  SDL_Quit();
-}
-
-// IGraphic	*Snake::initlib()
-// {
-//   return (*this);
-// }
 
 void		Snake::start_snake()
 {
@@ -51,6 +29,37 @@ void		Snake::start_snake()
 	SDL_Delay(20);
       _next = _current + 20;
     }
+}
+
+void		Snake::init(int w, int h)
+{
+  _screen = NULL;
+  _snake = NULL;
+  _wall = NULL;
+  _apple = NULL;
+  _bg = NULL;
+  _current = 0;
+  _next = 0;
+  _quit = 0;
+  event[SDLK_LEFT] = 0;
+  event[SDLK_RIGHT] = 0;
+  event[SDLK_ESCAPE] = 0;
+
+  std::string	s1;
+  std::string	s2;
+
+  s1 = "img/bg.jpg";
+  s2 = "img/wood1.png";
+  SDL_WM_SetCaption("SNAKE", NULL);
+  if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
+    exit(1);
+  _screen = SDL_SetVideoMode(WIDTH, HEIGHT, BPP, SDL_SWSURFACE);
+  _bg = load_image(s1);
+  _wall = load_image(s2);
+  apply_surface(0, 0, _bg, _screen);
+  apply_wall();
+  my_flip();
+  start_snake();
 }
 
 // ---------------UGLY--------------
@@ -89,21 +98,6 @@ void		Snake::keys()
 // ---------------------------------
 // ------------GAME BASE------------
 // ---------------------------------
-
-void		Snake::init_values()
-{
-  _screen = NULL;
-  _snake = NULL;
-  _wall = NULL;
-  _apple = NULL;
-  _bg = NULL;
-  _current = 0;
-  _next = 0;
-  _quit = 0;
-  event[SDLK_LEFT] = 0;
-  event[SDLK_RIGHT] = 0;
-  event[SDLK_ESCAPE] = 0;
-}
 
 void		Snake::apply_wall()
 {

@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 // 
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Thu Mar 13 17:25:11 2014 ribeaud antonin
+// Last update Fri Mar 14 13:06:51 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -26,21 +26,17 @@
 #define WIDTH	832
 #define	BPP	32
 
-class Snake //: public IGraphic
+class Snake : public IGraphic
 {
 public:
-  Snake();
-  ~Snake();
-
-  //IGraphic	*initlib();
   SDL_Surface	*load_image(std::string &filename);
   void		apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest);
   void		my_flip();
   void		start_snake();
-  void		init_values();
   void		keys();
   void		apply_wall();
-  //  void		draw_image();
+  virtual  void		init(int w, int h);
+  Key		refresh(std::list<Pos>);
 
 private:
   SDL_Surface	*_screen;
