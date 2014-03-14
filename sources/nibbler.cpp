@@ -56,9 +56,31 @@ void Nibbler::startGame()
 
 void Nibbler::loopGame(Key key)
 {
-    for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end(); ++i)
-    {
+    std::list<Pos>::iterator head, tail, food;
+    bool eated;
+    Pos newTail, newHead;
 
+    for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end() && (*i).state <= 3 ; ++i)
+        head = i;
+    ++head;
+    for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end() && (*i).state >= 10 && (*i).state <= 13 ; ++i)
+        tail = i;
+    ++tail;
+    for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end() && (*i).state == 14; ++i)
+        food = i;
+    ++food;
+    eated = ((*food).x == (*head).x && (*food).y == (*head).y) ? true : false;
+    if (!eated)
+    {
+        newTail.x = (*tail).x;
+        newTail.y = (*tail).y;
+        if ((*tail).state == TAIL_NORTH || (*tail).state == TAIL_SOUTH)
+            newTail.y += ((*tail).state == TAIL_NORTH) ? 1 : -1;
+        if ((*tail).state == TAIL_EAST || (*tail).state == TAIL_WEST)
+            newTail.y += ((*tail).state == TAIL_EAST) ? 1 : -1;
+        this->pos.push_back(newTail);
+        this->pos.erase(tail);
     }
+
 }
 
