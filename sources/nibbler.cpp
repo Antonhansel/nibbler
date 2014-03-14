@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 18:21:36 2014 ribeaud antonin
+// Last update Fri Mar 14 19:49:25 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -55,11 +55,11 @@ void		Nibbler::startGame()
     }
 }
 
-void Nibbler::loopGame(Key key)
+void		Nibbler::loopGame(Key key)
 {
-    std::list<Pos>::iterator head, tail, food;
-    bool eated;
-    Pos newTail, newHead;
+  std::list<Pos>::iterator head, tail, food;
+  bool		eated;
+  Pos		newTail, newHead;
 
     for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end() && (*i).state <= 3 ; ++i)
         head = i;
@@ -82,5 +82,4 @@ void Nibbler::loopGame(Key key)
         this->pos.push_back(newTail);
         this->pos.erase(tail);
     }
-
 }

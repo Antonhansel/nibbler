@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 18:08:16 2014 ribeaud antonin
+// Last update Fri Mar 14 19:46:13 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
