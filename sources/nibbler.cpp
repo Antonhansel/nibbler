@@ -5,12 +5,13 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 13:23:04 2014 ribeaud antonin
+// Last update Fri Mar 14 18:21:36 2014 ribeaud antonin
 //
 
 #include <error.h>
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <iostream>
 #include "nibbler.hh"
 
 Nibbler::Nibbler(int w, int h)
@@ -34,12 +35,10 @@ void		Nibbler::initGraphic(std::string &libname)
   void		*handle;
   IGraphic	*(*creation)();
 
-  creation = NULL;
-  handle = NULL;
   if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
-    error(1, 0, "Wrong library file1");
-  if (!(creation = (IGraphic *(*)())dlsym(handle, "initlib")))
-    error(1, 0, "Wrong library file2");
+    error(1, 0, "dlopen failed: Unable to open library file!");
+  if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
+    error(1, 0, "dlsym failed!");
   this->graphic = creation();
 }
 
