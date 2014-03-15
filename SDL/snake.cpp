@@ -1,64 +1,37 @@
 //
 // opengl.cpp for opengl in /home/apollo/rendu/OPENGL_TUTO/test1
-// 
+//
 // Made by ribeaud antonin
 // Login   <ribeau_a@epitech.net>
-// 
+//
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
 // Last update Fri Mar 14 19:48:12 2014 ribeaud antonin
 //
 
+#include <error.h>
 #include "snake.hpp"
 
 extern "C"
 {
-  IGraphic	*init_lib()
-  {
-    return (new Snake);
-  }
-}
-
-void		Snake::start_snake()
-{
-  while (_quit == 0)
+    IGraphic	*init_lib()
     {
-      _current = SDL_GetTicks();
-      if (_current > _next)
-	keys();
-      else
-	SDL_Delay(20);
-      _next = _current + 20;
+        return (new Snake);
     }
 }
 
 void		Snake::init(int w, int h)
 {
-  std::string	s1;
-  std::string	s2;
-
-  _screen = NULL;
-  _snake = NULL;
-  _wall = NULL;
-  _apple = NULL;
-  _bg = NULL;
-  _current = 0;
-  _next = 0;
-  _quit = 0;
-  event[SDLK_LEFT] = 0;
-  event[SDLK_RIGHT] = 0;
-  event[SDLK_ESCAPE] = 0;
-  s1 = "img/bg.jpg";
-  s2 = "img/wood1.png";
-  SDL_WM_SetCaption("SNAKE", NULL);
-  if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
-    exit(1);
-  _screen = SDL_SetVideoMode(WIDTH, HEIGHT, BPP, SDL_SWSURFACE);
-  _bg = load_image(s1);
-  _wall = load_image(s2);
-  apply_surface(0, 0, _bg, _screen);
-  apply_wall();
-  my_flip();
-  start_snake();
+    _width = w;
+    _height = h;
+    SDL_WM_SetCaption("SNAKE", NULL);
+    if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
+        !(_screen = SDL_SetVideoMode(SP_SIZE * _width, SP_SIZE * _height, BPP, SDL_HWSURFACE)))
+        error(1, 0, "Couldn't initialize Graphic Mode");
+    _bg = load_image(Snake::bg_path);
+    _wall = load_image(Snake::wall_path);
+    apply_surface(0, 0, _bg, _screen);
+    apply_wall();
+    my_flip();
 }
 
 // ---------------UGLY--------------
@@ -71,28 +44,15 @@ void		Snake::init(int w, int h)
 
 void		Snake::apply_wall()
 {
-  int		i = 0;
-  int		j = 0;
-
-  while (i < WIDTH - 64)
+    for (int i = 0; i < _width; ++i)
     {
-      apply_surface(i, j, _wall, _screen);
-      i += 64;
+        apply_surface(i * SP_SIZE, 0, _wall, _screen);
+        apply_surface(i * SP_SIZE, (_height - 1) * SP_SIZE, _wall, _screen);
     }
-  while (j < HEIGHT - 64)
+    for (int i = 0; i < _height; ++i)
     {
-      apply_surface(i, j, _wall, _screen);
-      j += 64;
-    }
-  while (i > 0)
-    {
-      apply_surface(i, j, _wall, _screen);
-      i -= 64;
-    }
-  while (j > 0)
-    {
-      apply_surface(i, j, _wall, _screen);
-      j -= 64;
+        apply_surface(0, i * SP_SIZE, _wall, _screen);
+        apply_surface((_width - 1) * SP_SIZE, i * SP_SIZE, _wall, _screen);
     }
 }
 
@@ -102,70 +62,49 @@ void		Snake::apply_wall()
 
 SDL_Surface     *Snake::load_image(std::string &filename)
 {
-  SDL_Surface   *loadedImage;
-  SDL_Surface   *optimizedImage;
-  Uint32        colorkey;
+    SDL_Surface   *loadedImage;
+    SDL_Surface   *optimizedImage;
 
-  loadedImage = IMG_Load(filename.c_str());
-  if (loadedImage != NULL)
-    {
-      optimizedImage = SDL_DisplayFormat(loadedImage);
-      if (optimizedImage != NULL)
-	{
-	  colorkey = SDL_MapRGB(optimizedImage->format, 0, 0, 0);
-	  SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
-	}
-      SDL_FreeSurface(loadedImage);
-    }
-  else
-    exit (1);
-  return (optimizedImage);
+    if (!(loadedImage = IMG_Load(filename.c_str())))
+        error(1, 0, "Couldn't load image : %s", filename.c_str());
+    if (!(optimizedImage = SDL_DisplayFormat(loadedImage)))
+        error(1, 0, "Couldn't optimize image");
+    SDL_FreeSurface(loadedImage);
+    return (optimizedImage);
 }
 
 void		Snake::apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest)
 {
-  SDL_Rect	offset;
+    SDL_Rect	offset;
 
-  offset.x = x;
-  offset.y = y;
-  SDL_BlitSurface(src, NULL, dest, &offset);
+    offset.x = x;
+    offset.y = y;
+    if (SDL_BlitSurface(src, NULL, dest, &offset) == -1)
+        error(1, 0, "Couldn't Blit surface");
 }
 
 void		Snake::my_flip()
 {
-  SDL_Flip(_screen);
+    if (SDL_Flip(_screen) == -1)
+        error(1, 0, "Couldn't refresh screen");
 }
 
-
-Key		Snake::returnKey()
+Key		Snake::refresh(std::list<Pos> list, int delay)
 {
-  if (event[SDLK_LEFT])
+    while (SDL_PollEvent(&_event))
     {
-      event[SDLK_LEFT] = 0;
-      return (LEFT);
+        if (_event.type == SDL_QUIT)
+            return (ESCAPE);
+        if (_event.type == SDL_KEYDOWN)
+        {
+            if (_event.key.keysym.sym == SDLK_LEFT)
+                return (LEFT);
+            if (_event.key.keysym.sym == SDLK_RIGHT)
+                return (RIGHT);
+            if (_event.key.keysym.sym == SDLK_ESCAPE)
+                return (ESCAPE);
+        }
     }
-  else if (event[SDLK_RIGHT])
-    {
-      event[SDLK_RIGHT] = 0;
-      return (LEFT);
-    }
-  else if (event[SDLK_ESCAPE])
-    {
-      event[SDLK_ESCAPE] = 0;
-      return (ESCAPE);
-    }
-}
-
-Key		Snake::refresh(std::list<Pos> list)
-{
-  if (SDL_PollEvent(&_event))
-    {
-      if (_event.type == SDL_KEYDOWN)
-	event[_event.key.keysym.sym] = 1;
-      if (_event.type == SDL_KEYUP)
-	event[_event.key.keysym.sym] = 0;
-      if (_event.type == SDL_QUIT)
-	_quit = 1;
-    }
-  return (returnKey());
+    SDL_Delay(delay);
+    return (OTHER);
 }

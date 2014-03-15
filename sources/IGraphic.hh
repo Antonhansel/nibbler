@@ -34,7 +34,8 @@ enum State {
 enum Key {
     RIGHT,
     LEFT,
-    ESCAPE
+    ESCAPE,
+    OTHER
 };
 
 typedef struct {
@@ -53,7 +54,7 @@ class IGraphic {
 public:
   virtual ~IGraphic() = 0;
   virtual void init(int w, int h) = 0;
-  virtual Key refresh(std::list<Pos>) = 0;
+  virtual Key refresh(std::list<Pos>, int) = 0;
 };
 
 #endif

@@ -12,54 +12,56 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <iostream>
+#include <stdio.h>
 #include "nibbler.hh"
 
 Nibbler::Nibbler(int w, int h)
 {
-  this->width = w;
-  this->height = h;
-  this->graphic = NULL;
-  this->pos.push_back((Pos){1, 1, TAIL_WEST});
-  this->pos.push_back((Pos){1, 2, BODY_HORIZONTAL});
-  this->pos.push_back((Pos){1, 3, HEAD_WEST});
-  this->pos.push_back((Pos){2, 1, FOOD});
+    this->width = w;
+    this->height = h;
+    this->graphic = NULL;
+    this->pos.push_back((Pos){1, 1, TAIL_WEST});
+    this->pos.push_back((Pos){1, 2, BODY_HORIZONTAL});
+    this->pos.push_back((Pos){1, 3, HEAD_WEST});
+    this->pos.push_back((Pos){2, 1, FOOD});
 }
 
 Nibbler::~Nibbler()
 {
-  delete this->graphic;
+    delete this->graphic;
 }
 
 void		Nibbler::initGraphic(std::string &libname)
 {
-  void		*handle;
-  IGraphic	*(*creation)();
+    void		*handle;
+    IGraphic	*(*creation)();
 
-  if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
-    error(1, 0, "dlopen failed: Unable to open library file!");
-  if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
-    error(1, 0, "dlsym failed!");
-  this->graphic = creation();
+    if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
+        error(1, 0, "dlopen failed: Unable to open library file! -> %s", dlerror());
+    if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
+        error(1, 0, "dlsym failed! -> %s", dlerror());
+    this->graphic = creation();
+    this->graphic->init(this->width, this->height);
 }
 
 void		Nibbler::startGame()
 {
-  Key		key;
+    Key		key;
 
-  while (42)
+    while (42)
     {
-      key = this->graphic->refresh(this->pos);
-      if (key == ESCAPE)
-	break;
-      this->loopGame(key);
+        key = this->graphic->refresh(this->pos, 300);
+        if (key == ESCAPE)
+            break;
+        // this->loopGame(key);
     }
 }
 
 void		Nibbler::loopGame(Key key)
 {
-  std::list<Pos>::iterator head, tail, food;
-  bool		eated;
-  Pos		newTail, newHead;
+    std::list<Pos>::iterator head, tail, food;
+    bool		eated;
+    Pos		newTail, newHead;
 
     for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end() && (*i).state <= 3 ; ++i)
         head = i;
