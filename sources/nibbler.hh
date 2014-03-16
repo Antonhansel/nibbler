@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 14:24:41 2014 ribeaud antonin
+// Last update Sun Mar 16 14:39:32 2014 ribeaud antonin
 //
 
 #ifndef _NIBBLER_H
@@ -18,19 +18,19 @@
 
 class Nibbler {
 public:
-    Nibbler(int w, int h);
-    ~Nibbler();
+  Nibbler(int w, int h);
+  ~Nibbler();
 public:
-    void initGraphic(std::string &libname);
-    void startGame();
+  void initGraphic(std::string &libname);
+  void startGame();
 private:
-    void loopGame(Key key);
+  void loopGame(Key key);
 private:
-    IGraphic *graphic;
-    int width;
-    int height;
+  IGraphic *graphic;
+  int width;
+  int height;
 private:
-    std::list<Pos> pos;
+  std::list<Pos> pos;
 };
 
 #endif
