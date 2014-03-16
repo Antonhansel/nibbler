@@ -106,17 +106,10 @@ void		Snake::end_sdl()
 SDL_Surface     *Snake::load_image(std::string &filename)
 {
   SDL_Surface   *loadedImage;
-  SDL_Surface   *optimizedImage;
-  Uint32	colorkey;
 
   if (!(loadedImage = IMG_Load(filename.c_str())))
     error(1, 0, "Couldn't load image : %s", filename.c_str());
-  if (!(optimizedImage = SDL_DisplayFormat(loadedImage)))
-    error(1, 0, "Couldn't optimize image");
-  colorkey = SDL_MapRGB(optimizedImage->format, 0, 0, 0);
-  SDL_SetColorKey(optimizedImage, SDL_SRCCOLORKEY, colorkey);
-  SDL_FreeSurface(loadedImage);
-  return (optimizedImage);
+  return (loadedImage);
 }
 
 void		Snake::apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest)
