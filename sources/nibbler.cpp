@@ -53,15 +53,18 @@ void        Nibbler::startGame()
         key = this->graphic->refresh(this->pos, 300);
         if (key == ESCAPE)
             break;
-        printf("Got key : %d\n", key);
         this->loopGame(key);
-        printf("Finished\n");
+        if (this->looseGame())
+        {
+            std::cout << "You looooooooose !" << std::endl;
+            break;
+        }
     }
 }
 
 void        Nibbler::loopGame(Key key)
 {
-    std::list<Pos>::iterator    head, tail, food;
+    std::list<Pos>::iterator    head, tail, food, tmp;
     Pos                         newHead;
 
     food = pos.begin();
@@ -74,7 +77,12 @@ void        Nibbler::loopGame(Key key)
         this->pos.erase(tail);
         tail = this->pos.begin();
         advance(tail, 1);
-        (*tail).state = TAIL_NORTH;
+        tmp = this->pos.begin();
+        advance(tmp, 2);
+        if ((*tmp).x != (*tail).x)
+            (*tail).state = ((*tmp).x < (*tail).x) ? TAIL_EAST : TAIL_WEST;
+        else
+            (*tail).state = ((*tmp).y < (*tail).y) ? TAIL_SOUTH : TAIL_NORTH;
     }
     newHead.x = (*head).x;
     newHead.y = (*head).y;
@@ -83,6 +91,29 @@ void        Nibbler::loopGame(Key key)
         newHead.x += (newHead.state == HEAD_WEST) ? 1 : -1;
     if (newHead.state == HEAD_SOUTH || newHead.state == HEAD_NORTH)
         newHead.y += (newHead.state == HEAD_SOUTH) ? 1 : -1;
-    (*head).state = BODY_HORIZONTAL;
     this->pos.push_back(newHead);
+    tmp = this->pos.end();
+    advance(tmp, -3);
+    if ((*tmp).x == (*head).x)
+        (*head).state = BODY_VERTICAL;
+    else if ((*tmp).y == (*head).y)
+        (*head).state = BODY_HORIZONTAL;
+}
+
+bool    Nibbler::looseGame()
+{
+    std::list<Pos>::iterator head;
+
+    head = this->pos.end();
+    advance(head, -1);
+    if ((*head).x < 0 || (*head).x >= this->width)
+        return (true);
+    if ((*head).y < 0 || (*head).y >= this->height)
+        return (true);
+    for (std::list<Pos>::iterator i = this->pos.begin(); i != head; ++i)
+    {
+        if ((*i).state != FOOD && (*i).x == (*head).x && (*i).y == (*head).y)
+            return (true);
+    }
+    return (false);
 }

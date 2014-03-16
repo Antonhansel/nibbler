@@ -25,6 +25,7 @@ public:
     void startGame();
 private:
     void loopGame(Key key);
+    bool looseGame();
 private:
     IGraphic *graphic;
     int width;
