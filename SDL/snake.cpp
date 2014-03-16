@@ -33,27 +33,27 @@ void		Snake::init(int w, int h)
   my_flip();
 }
 
-Key		Snake::refresh(std::list<Pos> list, int delay)
+Key		Snake::refresh(std::list<Pos> &list, int delay)
 {
+  draw_img(list);
+  SDL_Delay(delay);
   while (SDL_PollEvent(&_event))
     {
       if (_event.type == SDL_QUIT)
-	return (ESCAPE);
+  return (ESCAPE);
       if (_event.type == SDL_KEYDOWN)
         {
-	  if (_event.key.keysym.sym == SDLK_LEFT)
-	    return (LEFT);
-	  if (_event.key.keysym.sym == SDLK_RIGHT)
-	    return (RIGHT);
-	  if (_event.key.keysym.sym == SDLK_ESCAPE)
-	    {
-	      end_sdl();
-	      return (ESCAPE);
-	    }
+    if (_event.key.keysym.sym == SDLK_LEFT)
+      return (LEFT);
+    if (_event.key.keysym.sym == SDLK_RIGHT)
+      return (RIGHT);
+    if (_event.key.keysym.sym == SDLK_ESCAPE)
+      {
+        end_sdl();
+        return (ESCAPE);
+      }
         }
     }
-  draw_img(list);
-  SDL_Delay(delay);
   return (OTHER);
 }
 
@@ -71,13 +71,13 @@ void		Snake::draw_img(std::list<Pos> &list)
 
 void		Snake::apply_snake(std::list<Pos> &list)
 {
-  for (std::list<Pos>::iterator i = list.begin(); i != list.end() ; ++i)
+  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
     apply_surface((*i).x * SP_SIZE, (*i).y * SP_SIZE, _snake[(*i).state], _screen);
 }
 
 void		Snake::apply_bg()
 {
-  apply_surface(0, 0, _bg, _screen);  
+  apply_surface(0, 0, _bg, _screen);
 }
 
 void		Snake::apply_wall()
@@ -137,7 +137,7 @@ void		Snake::my_flip()
 
 void		Snake::load()
 {
-  
+
   _bg = load_image(Snake::bg_path);
   _wall = load_image(Snake::wall_path);
   _snake[FOOD] = load_image(Snake::apple);
@@ -154,7 +154,7 @@ void		Snake::load()
 
   _snake[BODY_HORIZONTAL] = load_image(Snake::body_hor);
   _snake[BODY_VERTICAL] = load_image(Snake::body_vert);
-  
+
   _snake[BODY_ANGLE_SOUTH_EAST] = load_image(Snake::turn_downleft);
   _snake[BODY_ANGLE_SOUTH_WEST] = load_image(Snake::turn_downright);
   _snake[BODY_ANGLE_NORTH_EAST] = load_image(Snake::turn_upleft);

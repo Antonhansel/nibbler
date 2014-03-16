@@ -18,19 +18,21 @@
 
 class Nibbler {
 public:
-  Nibbler(int w, int h);
-  ~Nibbler();
+    Nibbler(int w, int h);
+    ~Nibbler();
 public:
-  void initGraphic(std::string &libname);
-  void startGame();
+    void initGraphic(std::string &libname);
+    void startGame();
 private:
-  void loopGame(Key key);
+    void loopGame(Key key);
 private:
-  IGraphic *graphic;
-  int width;
-  int height;
+    IGraphic *graphic;
+    int width;
+    int height;
 private:
-  std::list<Pos> pos;
+    std::list<Pos> pos;
 };
+
+#define LOOP(a, b, c) ((((a - c) < 0) ? ((a - c) % (b + 1) + b + 1) : ((a - c) % (b + 1))) + c)
 
 #endif

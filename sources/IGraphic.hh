@@ -15,9 +15,9 @@
 
 enum State {
     HEAD_NORTH = 0,
-    HEAD_SOUTH = 1,
-    HEAD_EAST = 2,
-    HEAD_WEST = 3,
+    HEAD_WEST = 1,
+    HEAD_SOUTH = 2,
+    HEAD_EAST = 3,
     BODY_HORIZONTAL = 4,
     BODY_VERTICAL = 5,
     BODY_ANGLE_NORTH_EAST = 6,
@@ -32,10 +32,10 @@ enum State {
 };
 
 enum Key {
-    RIGHT,
-    LEFT,
-    ESCAPE,
-    OTHER
+    RIGHT = 1,
+    LEFT = -1,
+    ESCAPE = 2,
+    OTHER = 0
 };
 
 typedef struct {
@@ -54,7 +54,7 @@ class IGraphic {
 public:
   virtual ~IGraphic() = 0;
   virtual void init(int w, int h) = 0;
-  virtual Key refresh(std::list<Pos>, int) = 0;
+  virtual Key refresh(std::list<Pos> &, int) = 0;
 };
 
 #endif

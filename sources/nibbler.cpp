@@ -17,73 +17,72 @@
 
 Nibbler::Nibbler(int w, int h)
 {
-  this->width = w;
-  this->height = h;
-  this->graphic = NULL;
-  this->pos.push_back((Pos){1, 1, TAIL_WEST});
-  this->pos.push_back((Pos){2, 1, BODY_HORIZONTAL});
-  this->pos.push_back((Pos){3, 1, HEAD_WEST});
-  this->pos.push_back((Pos){1, 2, FOOD});
+    this->width = w;
+    this->height = h;
+    this->graphic = NULL;
+    this->pos.push_back((Pos){3, 3, FOOD});
+    this->pos.push_back((Pos){1, 1, TAIL_WEST});
+    this->pos.push_back((Pos){2, 1, BODY_HORIZONTAL});
+    this->pos.push_back((Pos){3, 1, HEAD_WEST});
 }
 
 Nibbler::~Nibbler()
 {
-  delete this->graphic;
+    delete this->graphic;
 }
 
-void		Nibbler::initGraphic(std::string &libname)
+void        Nibbler::initGraphic(std::string &libname)
 {
-  void		*handle;
-  IGraphic	*(*creation)();
+    void        *handle;
+    IGraphic    *(*creation)();
 
-  if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
-    error(1, 0, "dlopen failed: Unable to open library file! -> %s", dlerror());
-  if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
-    error(1, 0, "dlsym failed! -> %s", dlerror());
-  this->graphic = creation();
-  this->graphic->init(this->width, this->height);
+    if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
+        error(1, 0, "dlopen failed: Unable to open library file! -> %s", dlerror());
+    if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
+        error(1, 0, "dlsym failed! -> %s", dlerror());
+    this->graphic = creation();
+    this->graphic->init(this->width, this->height);
 }
 
-void		Nibbler::startGame()
+void        Nibbler::startGame()
 {
-    Key		key;
+    Key     key;
 
     while (42)
-      {
+    {
         key = this->graphic->refresh(this->pos, 300);
         if (key == ESCAPE)
-	  break;
-        //this->loopGame(key);
-      }
+            break;
+        printf("Got key : %d\n", key);
+        this->loopGame(key);
+        printf("Finished\n");
+    }
 }
 
-void		Nibbler::loopGame(Key key)
+void        Nibbler::loopGame(Key key)
 {
-  std::list<Pos>::iterator head, tail, food;
-  bool		eated;
-  Pos		newTail, newHead;
-  
-  for (std::list<Pos>::iterator i = pos.begin(); i != pos.end() && (*i).state <= 3 ; ++i)
+    std::list<Pos>::iterator    head, tail, food;
+    Pos                         newHead;
+
+    food = pos.begin();
+    tail = pos.begin();
+    advance(tail, 1);
+    head = pos.end();
+    advance(head, -1);
+    if ((*food).x != (*head).x || (*food).y != (*head).y)
     {
-      head = i;
+        this->pos.erase(tail);
+        tail = this->pos.begin();
+        advance(tail, 1);
+        (*tail).state = TAIL_NORTH;
     }
-  ++head;
-  for (std::list<Pos>::iterator i = pos.begin(); i != pos.end() && (*i).state >= 10 && (*i).state <= 13 ; ++i)
-    tail = i;
-  ++tail;
-  for (std::list<Pos>::iterator i = pos.begin(); i != pos.end() && (*i).state == 14; ++i)
-    food = i;
-  ++food;
-  eated = ((*food).x == (*head).x && (*food).y == (*head).y) ? true : false;
-  if (!eated)
-    {
-      newTail.x = (*tail).x;
-      newTail.y = (*tail).y;
-      if ((*tail).state == TAIL_NORTH || (*tail).state == TAIL_SOUTH)
-	newTail.y += ((*tail).state == TAIL_NORTH) ? 1 : -1;
-      if ((*tail).state == TAIL_EAST || (*tail).state == TAIL_WEST)
-	newTail.y += ((*tail).state == TAIL_EAST) ? 1 : -1;
-      this->pos.push_back(newTail);
-      this->pos.erase(tail);
-    }
+    newHead.x = (*head).x;
+    newHead.y = (*head).y;
+    newHead.state = (State)LOOP((*head).state + key, HEAD_EAST, HEAD_NORTH);
+    if (newHead.state == HEAD_WEST || newHead.state == HEAD_EAST)
+        newHead.x += (newHead.state == HEAD_WEST) ? 1 : -1;
+    if (newHead.state == HEAD_SOUTH || newHead.state == HEAD_NORTH)
+        newHead.y += (newHead.state == HEAD_SOUTH) ? 1 : -1;
+    (*head).state = BODY_HORIZONTAL;
+    this->pos.push_back(newHead);
 }

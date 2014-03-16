@@ -41,7 +41,7 @@ public:
   void		end_sdl();
   void		load();
 
-  Key		refresh(std::list<Pos>, int);
+  Key		refresh(std::list<Pos> &, int);
   ~Snake() {};
 
 private:
