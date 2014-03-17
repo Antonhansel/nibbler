@@ -26,6 +26,7 @@ public:
 private:
     void loopGame(Key key);
     bool looseGame();
+    void putNewFood();
 private:
     IGraphic *graphic;
     int width;

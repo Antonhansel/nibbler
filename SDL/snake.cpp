@@ -25,7 +25,7 @@ void		Snake::init(int w, int h)
   _height = h;
   SDL_WM_SetCaption(NAME, NULL);
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
-      !(_screen = SDL_SetVideoMode(SP_SIZE * _width, SP_SIZE * _height, BPP, SDL_HWSURFACE)))
+      !(_screen = SDL_SetVideoMode(SP_SIZE * (_width + 2), SP_SIZE * (_height + 2), BPP, SDL_HWSURFACE)))
     error(1, 0, "Couldn't initialize Graphic Mode");
   load();
   apply_bg();
@@ -72,7 +72,7 @@ void		Snake::draw_img(std::list<Pos> &list)
 void		Snake::apply_snake(std::list<Pos> &list)
 {
   for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
-    apply_surface((*i).x * SP_SIZE, (*i).y * SP_SIZE, _snake[(*i).state], _screen);
+    apply_surface((*i).x * SP_SIZE + SP_SIZE, (*i).y * SP_SIZE + SP_SIZE, _snake[(*i).state], _screen);
 }
 
 void		Snake::apply_bg()
@@ -82,15 +82,15 @@ void		Snake::apply_bg()
 
 void		Snake::apply_wall()
 {
-  for (int i = 0; i < _width; ++i)
+  for (int i = 0; i <= _width + 1; ++i)
     {
       apply_surface(i * SP_SIZE, 0, _wall, _screen);
-      apply_surface(i * SP_SIZE, (_height - 1) * SP_SIZE, _wall, _screen);
+      apply_surface(i * SP_SIZE, (_height + 1) * SP_SIZE, _wall, _screen);
     }
-  for (int i = 0; i < _height; ++i)
+  for (int i = 0; i <= _height + 1; ++i)
     {
       apply_surface(0, i * SP_SIZE, _wall, _screen);
-      apply_surface((_width - 1) * SP_SIZE, i * SP_SIZE, _wall, _screen);
+      apply_surface((_width + 1) * SP_SIZE, i * SP_SIZE, _wall, _screen);
     }
 }
 
