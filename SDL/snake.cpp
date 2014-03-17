@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sun Mar 16 18:10:45 2014 ribeaud antonin
+// Last update Mon Mar 17 10:42:49 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -40,18 +40,18 @@ Key		Snake::refresh(std::list<Pos> &list, int delay)
   while (SDL_PollEvent(&_event))
     {
       if (_event.type == SDL_QUIT)
-  return (ESCAPE);
+	return (ESCAPE);
       if (_event.type == SDL_KEYDOWN)
         {
-    if (_event.key.keysym.sym == SDLK_LEFT)
-      return (LEFT);
-    if (_event.key.keysym.sym == SDLK_RIGHT)
-      return (RIGHT);
-    if (_event.key.keysym.sym == SDLK_ESCAPE)
-      {
-        end_sdl();
-        return (ESCAPE);
-      }
+	  if (_event.key.keysym.sym == SDLK_LEFT)
+	    return (LEFT);
+	  if (_event.key.keysym.sym == SDLK_RIGHT)
+	    return (RIGHT);
+	  if (_event.key.keysym.sym == SDLK_ESCAPE)
+	    {
+	      end_sdl();
+	      return (ESCAPE);
+	    }
         }
     }
   return (OTHER);

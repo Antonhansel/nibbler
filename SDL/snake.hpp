@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Sun Mar 16 17:03:45 2014 ribeaud antonin
+// Last update Mon Mar 17 10:38:53 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -25,7 +25,7 @@
 #define HEIGHT	632
 #define WIDTH	832
 #define	BPP	32
-#define SP_SIZE 64
+#define SP_SIZE 32
 
 class Snake : public IGraphic
 {
