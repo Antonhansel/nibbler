@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Mon Mar 17 10:38:53 2014 ribeaud antonin
+// Last update Mon Mar 17 20:43:34 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -41,7 +41,7 @@ public:
   void		end_sdl();
   void		load();
 
-  Key		refresh(std::list<Pos> &, int);
+  Key		refresh_screen(std::list<Pos> &, int);
   ~Snake() {};
 
 private:

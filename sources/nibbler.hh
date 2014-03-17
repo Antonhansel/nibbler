@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 11:17:20 2014 ribeaud antonin
+// Last update Mon Mar 17 20:37:06 2014 ribeaud antonin
 //
 
 #ifndef _NIBBLER_H
@@ -31,7 +31,8 @@ private:
     IGraphic *graphic;
     int width;
     int height;
-  int speed;
+  int _speed;
+  int	_score;
 private:
     std::list<Pos> pos;
 };

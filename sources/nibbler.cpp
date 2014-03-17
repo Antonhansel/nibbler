@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 11:28:18 2014 ribeaud antonin
+// Last update Mon Mar 17 20:43:04 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -49,17 +49,18 @@ void        Nibbler::startGame()
 {
     Key     key;
 
-    speed = 300;
+    _speed = 300;
+    _score = 0;
     srand(time(NULL));
     while (42)
     {
-        key = this->graphic->refresh(this->pos, speed);
+        key = this->graphic->refresh_screen(this->pos, _speed);
         if (key == ESCAPE)
             break;
         this->loopGame(key);
         if (this->looseGame())
         {
-            std::cout << "You looooooooose !" << std::endl;
+	  std::cout << "You died!1! Score:" << _score << std::endl;
             break;
         }
     }
@@ -127,7 +128,10 @@ void    Nibbler::putNewFood()
 {
     bool freePos[this->width * this->height];
     int  test;
-
+    
+    if (_speed > 59)
+      _speed -= 30;
+    _score += 1 + (300 - _speed);
     this->pos.erase(this->pos.begin());
     for(int i = 0; i < this->width * this->height; ++i)
         freePos[i] = true;

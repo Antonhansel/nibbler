@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Mon Mar 17 10:42:49 2014 ribeaud antonin
+// Last update Mon Mar 17 20:43:44 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -33,7 +33,7 @@ void		Snake::init(int w, int h)
   my_flip();
 }
 
-Key		Snake::refresh(std::list<Pos> &list, int delay)
+Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
 {
   draw_img(list);
   SDL_Delay(delay);

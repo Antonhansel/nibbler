@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 19:46:13 2014 ribeaud antonin
+// Last update Mon Mar 17 20:43:17 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
@@ -54,7 +54,7 @@ class IGraphic {
 public:
   virtual ~IGraphic() = 0;
   virtual void init(int w, int h) = 0;
-  virtual Key refresh(std::list<Pos> &, int) = 0;
+  virtual Key refresh_screen(std::list<Pos> &, int) = 0;
 };
 
 #endif
