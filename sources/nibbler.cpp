@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 20:43:04 2014 ribeaud antonin
+// Last update Mon Mar 17 21:18:38 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -61,7 +61,8 @@ void        Nibbler::startGame()
         if (this->looseGame())
         {
 	  std::cout << "You died!1! Score:" << _score << std::endl;
-            break;
+	  this->graphic->refresh_screen(this->pos, 0);
+	  break;
         }
     }
 }
