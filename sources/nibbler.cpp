@@ -129,10 +129,10 @@ void    Nibbler::putNewFood()
 {
     bool freePos[this->width * this->height];
     int  test;
-    
+
     if (_speed > 59)
       _speed -= 30;
-    _score += 1 + (300 - _speed);
+    _score++;
     this->pos.erase(this->pos.begin());
     for(int i = 0; i < this->width * this->height; ++i)
         freePos[i] = true;
