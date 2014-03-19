@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 19 18:38:09 2014 ribeaud antonin
+// Last update Wed Mar 19 20:17:50 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -31,7 +31,7 @@ void		Snake::draw_img(std::list<Pos> &list)
 {
   static	int i = 0;
 
-  int		zoom = 15;
+  int		zoom = 20;
   i += 3;
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -44,10 +44,23 @@ void		Snake::draw_img(std::list<Pos> &list)
   //     gluLookAt(0, -zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
   //   else if ((*i).state == 3)
   //     gluLookAt(zoom, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  gluLookAt(0, 0, 20, _height/2, _width/2, 0, 0, 0, 1);
+  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+    if ((*i).state >= 0 && (*i).state <= 3)
+      {
+	if ((*i).x > _height/2 && (*i).y > _width/2)
+	  {
+	    printf("TOP\n");
+	    gluLookAt(0, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
+	  }
+	else
+	  {
+	    printf("BOT\n");
+	    gluLookAt(zoom, zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
+	  }
+      }
+  //  gluLookAt(0, 0, 20, _height/2, _width/2, 0, 0, 0, 1);
   apply_bg();
   apply_wall();
-  load();
   apply_snake(list);
   my_flip();
 }
@@ -68,14 +81,21 @@ void		Snake::apply_wall()
 
 void		Snake::apply_bg()
 {
+  
   glMatrixMode(GL_MODELVIEW);
-  glBegin(GL_QUADS);  
+  glBegin(GL_QUADS);
+  
   glColor3ub(0,255,0);
 
-  glVertex3d(-1,         _width + 2, -1);
-  glVertex3d(_width + 2, _height + 2, -1);
+  glVertex3d(-1,          -1, -1);
+  glVertex3d(-1,          _height + 2, -1);
+  glVertex3d(_width + 2,  _height + 2, -1);
   glVertex3d(_height + 2, -1, -1);
-  glVertex3d(-1,         _height + 2, -1);
+
+  // glVertex3d(x,     y,     -1);
+  // glVertex3d(x,     y + 1, -1);
+  // glVertex3d(x + 1, y + 1, -1);
+  // glVertex3d(x + 1, y,     -1);
 
   glEnd();
 }
@@ -126,37 +146,6 @@ void		Snake::draw_block(int x, int y, int state)
   glVertex3d(x,     y,      1);
   glVertex3d(x + 1, y,      1);
   glVertex3d(x + 1, y + 1,  1);
-
-  /*teeeeest*/
-
-  // glVertex3d(x,y,-1);
-  // glVertex3d(-x,y,-1);
-  // glVertex3d(-x,y,1);
-
-  // glVertex3d(x,-y,1);
-  // glVertex3d(x,-y,-1);
-  // glVertex3d(x,y,-1);
-  // glVertex3d(x,y,1);
-
-  // glVertex3d(-x,-y,1);
-  // glVertex3d(-x,-y,-1);
-  // glVertex3d(x,-y,-1);
-  // glVertex3d(x,-y,1);
-
-  // glVertex3d(-x,y,1);
-  // glVertex3d(-x,y,-1);
-  // glVertex3d(-x,-y,-1);
-  // glVertex3d(-x,-y,1);
-
-  // glVertex3d(x,y,-1);
-  // glVertex3d(x,-y,-1);
-  // glVertex3d(-x,-y,-1);
-  // glVertex3d(-x,y,-1);
-
-  // glVertex3d(x,-y,1);
-  // glVertex3d(x,y,1);
-  // glVertex3d(-x,y,1);
-  // glVertex3d(-x,-y,1);
 
   glEnd();
 }

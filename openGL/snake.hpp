@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Wed Mar 19 15:02:46 2014 ribeaud antonin
+// Last update Wed Mar 19 19:45:11 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -48,19 +48,17 @@ public:
   Key		refresh_screen(std::list<Pos> &, int);
   void		*keySpecial(int key, int x, int y);
   Key		keyNormal(unsigned char key, int x, int y);
+  GLuint       	loadTexture(const char *filename, bool useMipMap);
+  SDL_Surface	*flipSurface(SDL_Surface * surface);
   ~Snake() {};
 
 private:
-  std::map<State, SDL_Surface *>	_snake;
-  SDL_Surface	*_screen;
-  SDL_Surface	*_apple;
-  SDL_Surface	*_bg;
-  SDL_Surface	*_wall;
-  TTF_Font	*_font;
+  GLuint	_bg;
   SDL_Event	_event;
-  int _width;
-  int _height;
-  Key	_key;
+  SDL_Surface	*_screen;
+  int		_width;
+  int		_height;
+  Key		_key;
 
 };
 
