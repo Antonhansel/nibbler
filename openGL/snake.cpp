@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 19 21:17:04 2014 ribeaud antonin
+// Last update Wed Mar 19 21:52:28 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -25,6 +25,7 @@ void		Snake::init(int w, int h)
   glEnable(GL_DEPTH_TEST);
   _height -= 1;
   _width -= 1;
+  _help = -1;
 }
 
 void		Snake::draw_img(std::list<Pos> &list)
@@ -58,6 +59,8 @@ void		Snake::draw_img(std::list<Pos> &list)
   apply_bg();
   apply_wall();
   apply_snake(list);
+  if (_help == 1)
+    load();
   my_flip();
 }
 
@@ -76,22 +79,16 @@ void		Snake::apply_wall()
 }
 
 void		Snake::apply_bg()
-{
-  
+{  
   glMatrixMode(GL_MODELVIEW);
   glBegin(GL_QUADS);
   
-  glColor3ub(0,255,0);
-
+  glColor3ub(120, 255, 120);
   glVertex3d(-1,          -1, -1);
   glVertex3d(-1,          _height + 2, -1);
+  glColor3ub(50, 255, 50);
   glVertex3d(_width + 2,  _height + 2, -1);
   glVertex3d(_height + 2, -1, -1);
-
-  // glVertex3d(x,     y,     -1);
-  // glVertex3d(x,     y + 1, -1);
-  // glVertex3d(x + 1, y + 1, -1);
-  // glVertex3d(x + 1, y,     -1);
 
   glEnd();
 }
@@ -102,6 +99,28 @@ void		Snake::apply_snake(std::list<Pos> &list)
     draw_block((*i).x, (*i).y, (*i).state);
 }
 
+void		Snake::loadColor(int i, int state)
+{
+  if (i == 1)
+    {
+      if (state == 14)
+	glColor3ub(255,0,0);
+      else if (state == -1)
+	glColor3ub(0, 255, 255);
+      else
+	glColor3ub(0 , 0, 255);
+    }
+  else
+    {
+      if (state == 14)
+	glColor3ub(0,0,255);
+      else if (state == -1)
+	glColor3ub(255, 255, 0);
+      else
+	glColor3ub(255, 0, 0);
+    }
+}
+
 void		Snake::draw_block(int x, int y, int state)
 {
   glMatrixMode(GL_MODELVIEW);
@@ -110,9 +129,11 @@ void		Snake::draw_block(int x, int y, int state)
   if (state == 14)
     glColor3ub(255,0,0);
   else if (state == -1)
-    glColor3ub(0, 255, 255);
-  else
+    glColor3ub(rand()%255, rand()%255, rand()%255);
+  else if (state <= 3)
     glColor3ub(0 , 0, 255);
+  else
+    glColor3ub(50 , 0, 190);
   glVertex3d(x,     y,      1);
   glVertex3d(x,     y,     -1);
   glVertex3d(x + 1, y,     -1);
@@ -168,6 +189,8 @@ Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
 	      end_sdl();
 	      return (ESCAPE);
 	    }
+	  if (_event.key.keysym.sym == SDLK_UP)
+	    _help *= -1;
         }
     }
   return (OTHER);
