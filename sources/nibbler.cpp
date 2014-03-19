@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 21:18:38 2014 ribeaud antonin
+// Last update Wed Mar 19 09:52:18 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -53,18 +53,18 @@ void        Nibbler::startGame()
     _score = 0;
     srand(time(NULL));
     while (42)
-    {
-        key = this->graphic->refresh_screen(this->pos, _speed);
-        if (key == ESCAPE)
-            break;
-        this->loopGame(key);
-        if (this->looseGame())
-        {
-	  std::cout << "You died!1! Score:" << _score << std::endl;
-	  this->graphic->refresh_screen(this->pos, 0);
+      {
+	key = this->graphic->refresh_screen(this->pos, _speed);
+	if (key == ESCAPE)
 	  break;
-        }
-    }
+	this->loopGame(key);
+	if (this->looseGame())
+	  {
+	    std::cout << "You died!1! Score:" << _score << std::endl;
+	    this->graphic->refresh_screen(this->pos, 0);
+	    break;
+	  }
+      }
 }
 
 void	Nibbler::loopGame(Key key)
@@ -114,32 +114,32 @@ bool    Nibbler::looseGame()
     head = this->pos.end();
     advance(head, -1);
     if ((*head).x < 0 || (*head).x >= this->width)
-        return (true);
+      return (true);
     if ((*head).y < 0 || (*head).y >= this->height)
-        return (true);
+      return (true);
     for (std::list<Pos>::iterator i = this->pos.begin(); i != head; ++i)
-    {
+      {
         if ((*i).state != FOOD && (*i).x == (*head).x && (*i).y == (*head).y)
-            return (true);
-    }
+	  return (true);
+      }
     return (false);
 }
 
 void    Nibbler::putNewFood()
 {
-    bool freePos[this->width * this->height];
-    int  test;
+  bool freePos[this->width * this->height];
+  int  test;
     
-    if (_speed > 59)
-      _speed -= 30;
-    _score += 1 + (300 - _speed);
-    this->pos.erase(this->pos.begin());
-    for(int i = 0; i < this->width * this->height; ++i)
-        freePos[i] = true;
-    for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end(); ++i)
-        freePos[(*i).x * this->width + (*i).y] = false;
-    do {
-        test = rand() % (this->width * this->height - 1);
-    } while (!freePos[test]);
-    this->pos.push_front((Pos){test % this->width, test / this->width, FOOD});
+  if (_speed > 59)
+    _speed -= 30;
+  _score += 1 + (300 - _speed);
+  this->pos.erase(this->pos.begin());
+  for(int i = 0; i < this->width * this->height; ++i)
+    freePos[i] = true;
+  for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end(); ++i)
+    freePos[(*i).x * this->width + (*i).y] = false;
+  do {
+    test = rand() % (this->width * this->height - 1);
+  } while (!freePos[test]);
+  this->pos.push_front((Pos){test % this->width, test / this->width, FOOD});
 }

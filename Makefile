@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Fri Mar 14 13:13:43 2014 ribeaud antonin
-## Last update Mon Mar 17 21:01:35 2014 ribeaud antonin
+## Last update Wed Mar 19 09:55:31 2014 ribeaud antonin
 ##
 
 NAME_EXE        = nibbler
@@ -24,12 +24,17 @@ SRC_NC         = ncurses/snake.cpp
 NC_FLAG        = -lncurses
 OBJ_NC         = $(SRC_NC:.cpp=.o)
 
+NAME_GL        	= lib_nibbler_opengl.so
+SRC_GL		= openGL/snake.cpp
+GL_FLAG        	= -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -lGLU -lGL -lpthread -lglut -lGLEW
+OBJ_GL         	= $(SRC_GL:.cpp=.o)
+
 LDFLAGS         += -ldl
 CXXFLAGS        += -fPIC #-Wall -Werror -Werror
 
 CXX             = g++
 
-all:		$(NAME_LIB) $(NAME_NC) $(NAME_EXE)
+all:		$(NAME_LIB) $(NAME_NC) $(NAME_GL) $(NAME_EXE)
 
 $(NAME_EXE):	$(OBJ_EXE)
 		$(CXX) -o $(NAME_EXE) $(OBJ_EXE) $(LDFLAGS)
@@ -40,10 +45,13 @@ $(NAME_LIB):	$(OBJ_LIB)
 $(NAME_NC):	$(OBJ_NC)
 		$(CXX) -shared -o $(NAME_NC) $(OBJ_NC) $(NC_FLAG)
 
+$(NAME_GL):	$(OBJ_GL)
+		$(CXX) -shared -o $(NAME_GL) $(OBJ_GL) $(GL_FLAG)
+
 clean:
-		rm -f $(OBJ_LIB) $(OBJ_EXE) $(OBJ_NC)
+		rm -f $(OBJ_LIB) $(OBJ_EXE) $(OBJ_NC) $(OBJ_GL)
 
 fclean:		clean
-		rm -f $(NAME_EXE) $(NAME_LIB) $(NAME_NC)
+		rm -f $(NAME_EXE) $(NAME_LIB) $(NAME_NC) $(NAME_GL)
 
 re:		fclean all
