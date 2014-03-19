@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 19 20:17:50 2014 ribeaud antonin
+// Last update Wed Mar 19 21:17:04 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -29,10 +29,7 @@ void		Snake::init(int w, int h)
 
 void		Snake::draw_img(std::list<Pos> &list)
 {
-  static	int i = 0;
-
   int		zoom = 20;
-  i += 3;
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   // for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
@@ -44,21 +41,20 @@ void		Snake::draw_img(std::list<Pos> &list)
   //     gluLookAt(0, -zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
   //   else if ((*i).state == 3)
   //     gluLookAt(zoom, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
-    if ((*i).state >= 0 && (*i).state <= 3)
-      {
-	if ((*i).x > _height/2 && (*i).y > _width/2)
-	  {
-	    printf("TOP\n");
-	    gluLookAt(0, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
-	  }
-	else
-	  {
-	    printf("BOT\n");
-	    gluLookAt(zoom, zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
-	  }
-      }
-  //  gluLookAt(0, 0, 20, _height/2, _width/2, 0, 0, 0, 1);
+  // for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+  //   {
+  //     if ((*i).state >= 0 && (*i).state <= 3 && _delay <= 30)
+  // 	{
+  // 	  printf("TEST\n");
+  // 	  gluLookAt(0, 0, zoom, (*i).x, (*i).y, 0, 0, 0, 1);
+  // 	}
+  //     else
+  // 	{
+  // 	  printf("TEST2\n");
+  // 	  gluLookAt(0, 0, 20, _height/2, _width/2, 0, 0, 0, 1);
+  // 	}
+  //   }
+  gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _height/8), 0, 0, 0, 1);
   apply_bg();
   apply_wall();
   apply_snake(list);
@@ -152,9 +148,9 @@ void		Snake::draw_block(int x, int y, int state)
 
 Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
 {
-  static	int i = 1;
   Key		key;
 
+  _delay = delay;
   draw_img(list);
   usleep(delay * 1000);
   while (SDL_PollEvent(&_event))

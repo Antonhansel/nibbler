@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Wed Mar 19 19:45:11 2014 ribeaud antonin
+// Last update Wed Mar 19 20:56:32 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -59,7 +59,7 @@ private:
   int		_width;
   int		_height;
   Key		_key;
-
+  int		_delay;
 };
 
 #endif /*!_SNAKE_HPP*/
