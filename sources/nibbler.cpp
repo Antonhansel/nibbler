@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 21:18:38 2014 ribeaud antonin
+// Last update Thu Mar 20 15:44:42 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -17,14 +17,19 @@
 
 Nibbler::Nibbler(int w, int h)
 {
-    this->width = w;
-    this->height = h;
-    this->graphic = NULL;
-    this->pos.push_back((Pos){3, 3, FOOD});
-    this->pos.push_back((Pos){1, 1, TAIL_WEST});
-    this->pos.push_back((Pos){2, 1, BODY_HORIZONTAL});
-    this->pos.push_back((Pos){3, 1, BODY_HORIZONTAL});
-    this->pos.push_back((Pos){4, 1, HEAD_WEST});
+  int		tmpw;
+  int		tmph;
+
+  this->width = w;
+  this->height = h;
+  tmpw = w/2;
+  tmph = h/2;
+  this->graphic = NULL;
+  this->pos.push_back((Pos){3, 3, FOOD});
+  this->pos.push_back((Pos){tmpw-2, tmph, TAIL_WEST});
+  this->pos.push_back((Pos){tmpw-1, tmph, BODY_HORIZONTAL});
+  this->pos.push_back((Pos){tmpw, tmph, BODY_HORIZONTAL});
+  this->pos.push_back((Pos){tmpw+1, tmph, HEAD_WEST});
 }
 
 Nibbler::~Nibbler()

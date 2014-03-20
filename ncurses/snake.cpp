@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 15:32:34 2014 ribeaud antonin
+// Last update Thu Mar 20 16:01:23 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -18,46 +18,6 @@ extern "C"
   }
 }
 
-void		Snake::init_joystick()
-{
-  _fd = open("/dev/input/js1", O_NONBLOCK);
-  if (_fd > 0)
-    std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
-  else
-    std::cout << "Unable to detect joystick\n" << std::endl;
-}
-
-Key		Snake::update_joystick()
-{
-  struct js_event	e;
-
-  while (read(_fd, &e, sizeof(struct js_event)) > 0)
-    {
-      if (e.type &= JS_EVENT_BUTTON)
-	{
-	  if (e.value == 1)
-	    {
-	      if (e.number == 8)
-		{
-		  end();
-		  return (ESCAPE);
-		}
-	    }	
-	}
-      else
-	{
-	  if (e.number == 0)
-	    {
-	      if (e.value > 32700)
-		return (RIGHT);
-	      else if (e.value < -32700)
-		return (LEFT);
-	    }
-	}
-    }
-  return (OTHER);
-}
-
 void		Snake::init(int w, int h)
 {
   _width = w;
@@ -67,7 +27,7 @@ void		Snake::init(int w, int h)
   noecho();
   curs_set(0);
   raw();
-  window = newwin(_height + 1, _width + 1, 0, 0);
+  window = newwin(_height + 2, _width + 2, 0, 0);
   cbreak();
   nodelay(window, TRUE);
   notimeout(window, TRUE);
@@ -110,8 +70,10 @@ Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
 	return (update_joystick());
       else
 	{
-	  wtimeout(window, delay);
-	  key = wgetch(window);
+	  //wtimeout(window, delay);
+	  //key = wgetch(window);
+  	  timeout(delay);
+	  key = getch();
 	  if (key == KEY_LEFT)
 	    return (LEFT);
 	  if (key == KEY_RIGHT)
@@ -167,4 +129,48 @@ void		Snake::end()
   echo();
   nocbreak();
   endwin();
+}
+
+//
+// JOYSTICK
+//
+
+void		Snake::init_joystick()
+{
+  _fd = open("/dev/input/js1", O_NONBLOCK);
+  if (_fd > 0)
+    std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+  else
+    std::cout << "Unable to detect joystick\n" << std::endl;
+}
+
+Key		Snake::update_joystick()
+{
+  struct js_event	e;
+
+  while (read(_fd, &e, sizeof(struct js_event)) > 0)
+    {
+      if (e.type &= JS_EVENT_BUTTON)
+	{
+	  if (e.value == 1)
+	    {
+	      if (e.number == 8)
+		{
+		  end();
+		  return (ESCAPE);
+		}
+	    }	
+	}
+      else
+	{
+	  if (e.number == 0)
+	    {
+	      if (e.value > 32700)
+		return (LEFT);
+	      else if (e.value < -32700)
+		return (RIGHT);
+	    }
+	}
+    }
+  return (OTHER);
 }
