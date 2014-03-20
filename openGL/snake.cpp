@@ -5,48 +5,11 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 15:14:02 2014 ribeaud antonin
+// Last update Thu Mar 20 17:44:00 2014 ribeaud antonin
 //
 
 #include <error.h>
 #include "snake.hpp"
-
-void		Snake::init_joystick()
-{
-  _fd = open("/dev/input/js1", O_NONBLOCK);
-  if (_fd > 0)
-      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
-  else
-    std::cout << "Unable to detect joystick\n" << std::endl;
-}
-
-Key		Snake::update_joystick()
-{
-  struct js_event	e;
-
-  while (read(_fd, &e, sizeof(struct js_event)) > 0)
-    {
-      if (e.type &= JS_EVENT_BUTTON)
-	{
-	  if (e.value == 1)
-	    {
-	      if (e.number == 8)
-		return (ESCAPE);
-	    }	
-	}
-      else
-	{
-	  if (e.number == 0)
-	    {
-	      if (e.value > 32700)
-		return (LEFT);
-	      else if (e.value < -32700)
-		return (RIGHT);
-	    }
-	}
-    }
-  return (OTHER);
-}
 
 void		Snake::init(int w, int h)
 {
@@ -67,10 +30,11 @@ void		Snake::init(int w, int h)
   _help = -1;
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
+Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
 {
   Key		key;
 
+  _score = score;
   _delay = delay;
   draw_img(list);
   usleep(delay * 1000);
@@ -122,9 +86,21 @@ void		Snake::draw_img(std::list<Pos> &list)
   apply_bg();
   apply_wall();
   apply_snake(list);
+  apply_score();
   if (_help == 1)
     load();
   my_flip();
+}
+
+void		Snake::apply_score()
+{
+  std::stringstream newscore;
+  std::string	    temp;
+  char const * temp2;
+
+  newscore << "Score: " <<  _score;
+  temp = newscore.str();
+  temp2 = (char*)temp.c_str();
 }
 
 void		Snake::apply_wall()
@@ -298,3 +274,39 @@ extern "C"
   }
 }
 
+void		Snake::init_joystick()
+{
+  _fd = open("/dev/input/js1", O_NONBLOCK);
+  if (_fd > 0)
+      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+  else
+    std::cout << "Unable to detect joystick\n" << std::endl;
+}
+
+Key		Snake::update_joystick()
+{
+  struct js_event	e;
+
+  while (read(_fd, &e, sizeof(struct js_event)) > 0)
+    {
+      if (e.type &= JS_EVENT_BUTTON)
+	{
+	  if (e.value == 1)
+	    {
+	      if (e.number == 8)
+		return (ESCAPE);
+	    }	
+	}
+      else
+	{
+	  if (e.number == 0)
+	    {
+	      if (e.value > 32700)
+		return (LEFT);
+	      else if (e.value < -32700)
+		return (RIGHT);
+	    }
+	}
+    }
+  return (OTHER);
+}

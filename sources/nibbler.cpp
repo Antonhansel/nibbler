@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Thu Mar 20 15:44:42 2014 ribeaud antonin
+// Last update Thu Mar 20 16:38:39 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -52,21 +52,21 @@ void        Nibbler::initGraphic(std::string &libname)
 
 void        Nibbler::startGame()
 {
-    Key     key;
+  Key     key;
 
-    _speed = 300;
-    _score = 0;
-    srand(time(NULL));
-    while (42)
+  _speed = 300;
+  _score = 0;
+  srand(time(NULL));
+  while (42)
     {
-        key = this->graphic->refresh_screen(this->pos, _speed);
-        if (key == ESCAPE)
-            break;
-        this->loopGame(key);
-        if (this->looseGame())
+      key = this->graphic->refresh_screen(this->pos, _speed, _score);
+      if (key == ESCAPE)
+	break;
+      this->loopGame(key);
+      if (this->looseGame())
         {
 	  std::cout << "You died!1! Score:" << _score << std::endl;
-	  this->graphic->refresh_screen(this->pos, 0);
+	  this->graphic->refresh_screen(this->pos, 0, _score);
 	  break;
         }
     }

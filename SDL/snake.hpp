@@ -5,13 +5,14 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Thu Mar 20 15:24:53 2014 ribeaud antonin
+// Last update Thu Mar 20 17:44:26 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
 
 # include <string>
 # include <iostream>
+# include <sstream>
 # include <unistd.h>
 # include <fcntl.h>
 # include <SDL/SDL.h>
@@ -41,21 +42,23 @@ public:
   void		init(int w, int h);
   void		end_sdl();
   void		load();
-
+  void		init_font();
   void		init_joystick();
   Key		update_joystick();
-
-  Key		refresh_screen(std::list<Pos> &, int);
+  void		apply_score();
+  Key		refresh_screen(std::list<Pos> &, int, int);
   ~Snake() {};
 
 private:
   std::map<State, SDL_Surface *>	_snake;
   SDL_Surface	*_screen;
-  SDL_Surface	*_apple;
   SDL_Surface	*_bg;
   SDL_Surface	*_wall;
-  TTF_Font	*_font;
+  SDL_Surface	*_text;
   SDL_Event	_event;
+  SDL_Color	_color;
+  TTF_Font	*_font;
+  int		_score;
   int		_width;
   int		_height;
   int		_fd;

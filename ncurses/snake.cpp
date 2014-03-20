@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 16:01:23 2014 ribeaud antonin
+// Last update Thu Mar 20 16:36:30 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -55,7 +55,7 @@ void		Snake::testsize()
     }
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
+Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
 {
   int	key;
   

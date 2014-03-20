@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Thu Mar 20 15:13:47 2014 ribeaud antonin
+// Last update Thu Mar 20 17:31:41 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -13,6 +13,7 @@
 # include <string>
 # include <iostream>
 # include <unistd.h>
+# include <sstream>
 # include <stdio.h>
 # include <fcntl.h>
 # include <SDL/SDL.h>
@@ -47,7 +48,7 @@ public:
   void		end_sdl();
   void		load();
   void		draw_block(int x, int y, int state);
-  Key		refresh_screen(std::list<Pos> &, int);
+  Key		refresh_screen(std::list<Pos> &, int, int);
   void		*keySpecial(int key, int x, int y);
   Key		keyNormal(unsigned char key, int x, int y);
   GLuint       	loadTexture(const char *filename, bool useMipMap);
@@ -55,18 +56,23 @@ public:
   void		loadColor(int i, int state);
   void		init_joystick();
   Key		update_joystick();
+  void		apply_score();
+  void		init_font();
   ~Snake() {};
 
 private:
   GLuint	_bg;
   SDL_Event	_event;
   SDL_Surface	*_screen;
+  SDL_Surface	*_text;
+  TTF_Font	*_font;
+  SDL_Color	_color;
   int		_width;
   int		_height;
   Key		_key;
   int		_delay;
   int		_help;
-
+  int		_score;
   int		_fd;
   int		_joy;
 };
