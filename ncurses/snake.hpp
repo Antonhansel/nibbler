@@ -5,13 +5,15 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Tue Mar 18 10:09:39 2014 ribeaud antonin
+// Last update Thu Mar 20 15:24:52 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
 
 # include <string>
 # include <iostream>
+# include <unistd.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <curses.h>
 # include <map>
@@ -32,14 +34,20 @@ public:
   void		testsize();
   void		end();
   void		load();
+  
+  void		init_joystick();
+  Key		update_joystick();
+  
   Key		refresh_screen(std::list<Pos> &, int);
   void	        apply_surface(int x, int y, State state);
   ~Snake() {};
 
 struct   winsize _w;
-  int	 _width;
-  int	 _height;
-  WINDOW *window;
+  int		_width;
+  int		_height;
+  WINDOW	*window;
+  int		_fd;
+  int		_joy;
 };
 
 #endif /*!_SNAKE_HPP*/

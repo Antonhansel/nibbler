@@ -1,18 +1,20 @@
 //
 // opengl.hpp for opengl in /home/apollo/rendu/OPENGL_TUTO/test1
-//
+//o
 // Made by ribeaud antonin
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Wed Mar 19 21:43:16 2014 ribeaud antonin
+// Last update Thu Mar 20 15:13:47 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
 
 # include <string>
 # include <iostream>
-
+# include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
 # include <SDL/SDL.h>
 # include <SDL/SDL_mixer.h>
 # include <SDL/SDL_ttf.h>
@@ -51,6 +53,8 @@ public:
   GLuint       	loadTexture(const char *filename, bool useMipMap);
   SDL_Surface	*flipSurface(SDL_Surface * surface);
   void		loadColor(int i, int state);
+  void		init_joystick();
+  Key		update_joystick();
   ~Snake() {};
 
 private:
@@ -62,6 +66,9 @@ private:
   Key		_key;
   int		_delay;
   int		_help;
+
+  int		_fd;
+  int		_joy;
 };
 
 #endif /*!_SNAKE_HPP*/

@@ -5,11 +5,48 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 19 21:52:28 2014 ribeaud antonin
+// Last update Thu Mar 20 15:14:02 2014 ribeaud antonin
 //
 
 #include <error.h>
 #include "snake.hpp"
+
+void		Snake::init_joystick()
+{
+  _fd = open("/dev/input/js1", O_NONBLOCK);
+  if (_fd > 0)
+      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+  else
+    std::cout << "Unable to detect joystick\n" << std::endl;
+}
+
+Key		Snake::update_joystick()
+{
+  struct js_event	e;
+
+  while (read(_fd, &e, sizeof(struct js_event)) > 0)
+    {
+      if (e.type &= JS_EVENT_BUTTON)
+	{
+	  if (e.value == 1)
+	    {
+	      if (e.number == 8)
+		return (ESCAPE);
+	    }	
+	}
+      else
+	{
+	  if (e.number == 0)
+	    {
+	      if (e.value > 32700)
+		return (LEFT);
+	      else if (e.value < -32700)
+		return (RIGHT);
+	    }
+	}
+    }
+  return (OTHER);
+}
 
 void		Snake::init(int w, int h)
 {
@@ -23,39 +60,65 @@ void		Snake::init(int w, int h)
   glLoadIdentity();
   gluPerspective(70, (double)((w+2) * 32)/((h+2) * 32), 1, 1000);
   glEnable(GL_DEPTH_TEST);
+  _joy = -1;
+  init_joystick();
   _height -= 1;
   _width -= 1;
   _help = -1;
 }
 
+Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
+{
+  Key		key;
+
+  _delay = delay;
+  draw_img(list);
+  usleep(delay * 1000);
+  if (_fd > 0 && _joy == 1)
+    return (update_joystick());
+  else
+    {
+      while (SDL_PollEvent(&_event))
+	{
+	  if (_event.type == SDL_QUIT)
+	    return (ESCAPE);
+	  if (_event.type == SDL_KEYDOWN)
+	    {
+	      if (_event.key.keysym.sym == SDLK_LEFT)
+		return (RIGHT);
+	      if (_event.key.keysym.sym == SDLK_RIGHT)
+		return (LEFT);
+	      if (_event.key.keysym.sym == SDLK_ESCAPE)
+		{
+		  end_sdl();
+		  return (ESCAPE);
+		}
+	      if (_event.key.keysym.sym == SDLK_UP)
+		_help *=-1;
+	      if (_event.key.keysym.sym == SDLK_DOWN)
+		_joy *=-1;
+	    }
+	}
+    }
+  return (OTHER);
+}
+
 void		Snake::draw_img(std::list<Pos> &list)
 {
-  int		zoom = 20;
+  int		mode = 0;
+
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  // for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
-  //   if ((*i).state == 0)
-  //     gluLookAt(0, zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  //   else if ((*i).state == 1)
-  //     gluLookAt(-zoom, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  //   else if ((*i).state == 2)
-  //     gluLookAt(0, -zoom, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  //   else if ((*i).state == 3)
-  //     gluLookAt(zoom, 0, zoom, _height/2, _width/2, 0, 0, 0, 1);
-  // for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
-  //   {
-  //     if ((*i).state >= 0 && (*i).state <= 3 && _delay <= 30)
-  // 	{
-  // 	  printf("TEST\n");
-  // 	  gluLookAt(0, 0, zoom, (*i).x, (*i).y, 0, 0, 0, 1);
-  // 	}
-  //     else
-  // 	{
-  // 	  printf("TEST2\n");
-  // 	  gluLookAt(0, 0, 20, _height/2, _width/2, 0, 0, 0, 1);
-  // 	}
-  //   }
-  gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _height/8), 0, 0, 0, 1);
+  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+    {
+      if ((*i).state >= 0 && (*i).state <= 3 && _delay <= 30)
+  	{
+  	  mode = 1;
+	  gluLookAt(-_width/5, -_width/5, _width, (*i).x-((*i).x/16), (*i).y-((*i).y/8), 0, 0, 0, 1);
+	}
+    }
+  if (mode == 0)
+    gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _height/8), 0, 0, 0, 1);
   apply_bg();
   apply_wall();
   apply_snake(list);
@@ -167,35 +230,6 @@ void		Snake::draw_block(int x, int y, int state)
   glEnd();
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
-{
-  Key		key;
-
-  _delay = delay;
-  draw_img(list);
-  usleep(delay * 1000);
-  while (SDL_PollEvent(&_event))
-    {
-      if (_event.type == SDL_QUIT)
-	return (ESCAPE);
-      if (_event.type == SDL_KEYDOWN)
-        {
-	  if (_event.key.keysym.sym == SDLK_LEFT)
-	    return (RIGHT);
-	  if (_event.key.keysym.sym == SDLK_RIGHT)
-	    return (LEFT);
-	  if (_event.key.keysym.sym == SDLK_ESCAPE)
-	    {
-	      end_sdl();
-	      return (ESCAPE);
-	    }
-	  if (_event.key.keysym.sym == SDLK_UP)
-	    _help *= -1;
-        }
-    }
-  return (OTHER);
-}
-
 void		Snake::end_sdl()
 {
   SDL_Quit();
@@ -263,3 +297,4 @@ extern "C"
     return (new Snake);
   }
 }
+

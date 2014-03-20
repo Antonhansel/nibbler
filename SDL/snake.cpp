@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 19 20:18:48 2014 ribeaud antonin
+// Last update Thu Mar 20 15:24:55 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -19,6 +19,43 @@ extern "C"
   }
 }
 
+void		Snake::init_joystick()
+{
+  _fd = open("/dev/input/js1", O_NONBLOCK);
+  if (_fd > 0)
+      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+  else
+    std::cout << "Unable to detect joystick\n" << std::endl;
+}
+
+Key		Snake::update_joystick()
+{
+  struct js_event	e;
+
+  while (read(_fd, &e, sizeof(struct js_event)) > 0)
+    {
+      if (e.type &= JS_EVENT_BUTTON)
+	{
+	  if (e.value == 1)
+	    {
+	      if (e.number == 8)
+		return (ESCAPE);
+	    }	
+	}
+      else
+	{
+	  if (e.number == 0)
+	    {
+	      if (e.value > 32700)
+		return (RIGHT);
+	      else if (e.value < -32700)
+		return (LEFT);
+	    }
+	}
+    }
+  return (OTHER);
+}
+
 void		Snake::init(int w, int h)
 {
   _width = w;
@@ -27,6 +64,9 @@ void		Snake::init(int w, int h)
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
       !(_screen = SDL_SetVideoMode(SP_SIZE * (_width + 2), SP_SIZE * (_height + 2), BPP, SDL_HWSURFACE)))
     error(1, 0, "Couldn't initialize Graphic Mode");
+  _fd = 0;
+  _joy = -1;
+  init_joystick();
   load();
   apply_bg();
   apply_wall();
@@ -37,22 +77,29 @@ Key		Snake::refresh_screen(std::list<Pos> &list, int delay)
 {
   draw_img(list);
   SDL_Delay(delay);
-  while (SDL_PollEvent(&_event))
+  if (_fd > 0 && _joy == 1)
+    return (update_joystick());
+  else
     {
-      if (_event.type == SDL_QUIT)
-	return (ESCAPE);
-      if (_event.type == SDL_KEYDOWN)
-        {
-	  if (_event.key.keysym.sym == SDLK_LEFT)
-	      return (LEFT);
-	  if (_event.key.keysym.sym == SDLK_RIGHT)
-	      return (RIGHT);
-	  if (_event.key.keysym.sym == SDLK_ESCAPE)
+      while (SDL_PollEvent(&_event))
+	{
+	  if (_event.type == SDL_QUIT)
+	    return (ESCAPE);
+	  if (_event.type == SDL_KEYDOWN)
 	    {
-	      end_sdl();
-	      return (ESCAPE);
+	      if (_event.key.keysym.sym == SDLK_LEFT)
+		return (LEFT);
+	      if (_event.key.keysym.sym == SDLK_RIGHT)
+		return (RIGHT);
+	      if (_event.key.keysym.sym == SDLK_ESCAPE)
+		{
+		  end_sdl();
+		  return (ESCAPE);
+		}
+	      if (_event.key.keysym.sym == SDLK_DOWN)
+		_joy *= -1;
 	    }
-        }
+	}
     }
   return (OTHER);
 }
@@ -130,7 +177,6 @@ void		Snake::my_flip()
 
 void		Snake::load()
 {
-
   _bg = load_image(Snake::bg_path);
   _wall = load_image(Snake::wall_path);
   _snake[FOOD] = load_image(Snake::apple);

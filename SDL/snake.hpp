@@ -5,14 +5,15 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Mon Mar 17 20:43:34 2014 ribeaud antonin
+// Last update Thu Mar 20 15:24:53 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
 
 # include <string>
 # include <iostream>
-
+# include <unistd.h>
+# include <fcntl.h>
 # include <SDL/SDL.h>
 # include <SDL/SDL_mixer.h>
 # include <SDL/SDL_ttf.h>
@@ -41,6 +42,9 @@ public:
   void		end_sdl();
   void		load();
 
+  void		init_joystick();
+  Key		update_joystick();
+
   Key		refresh_screen(std::list<Pos> &, int);
   ~Snake() {};
 
@@ -52,8 +56,10 @@ private:
   SDL_Surface	*_wall;
   TTF_Font	*_font;
   SDL_Event	_event;
-  int _width;
-  int _height;
+  int		_width;
+  int		_height;
+  int		_fd;
+  int		_joy;
 
 private:
   static std::string bg_path;
@@ -100,6 +106,5 @@ std::string Snake::tail_up = "img/tail_up.png";
 std::string Snake::tail_down = "img/tail_down.png";
 std::string Snake::tail_right = "img/tail_right.png";
 std::string Snake::tail_left = "img/tail_left.png";
-
 
 #endif /*!_SNAKE_HPP*/
