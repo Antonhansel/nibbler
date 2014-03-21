@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Mon Mar 17 20:37:06 2014 ribeaud antonin
+// Last update Fri Mar 21 19:39:55 2014 ribeaud antonin
 //
 
 #ifndef _NIBBLER_H
@@ -27,12 +27,17 @@ private:
     void loopGame(Key key);
     bool looseGame();
     void putNewFood();
+  Key	handle_key(Key key);
 private:
     IGraphic *graphic;
-    int width;
-    int height;
-  int _speed;
-  int	_score;
+    int	     width;
+    int	     height;
+    int	     _speed;
+  int	     _score;
+
+  int		_addop;
+  int		_boost;
+  int		_slow;
 private:
     std::list<Pos> pos;
 };

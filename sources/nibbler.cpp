@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Thu Mar 20 16:38:39 2014 ribeaud antonin
+// Last update Fri Mar 21 19:42:45 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -30,6 +30,8 @@ Nibbler::Nibbler(int w, int h)
   this->pos.push_back((Pos){tmpw-1, tmph, BODY_HORIZONTAL});
   this->pos.push_back((Pos){tmpw, tmph, BODY_HORIZONTAL});
   this->pos.push_back((Pos){tmpw+1, tmph, HEAD_WEST});
+  _boost = 0;
+  _slow = 0;
 }
 
 Nibbler::~Nibbler()
@@ -50,6 +52,32 @@ void        Nibbler::initGraphic(std::string &libname)
     this->graphic->init(this->width, this->height);
 }
 
+Key	    Nibbler::handle_key(Key key)
+{
+  if (key == BOOST && _addop == 1)
+    {
+      if (_boost == 0)
+	{
+	  _speed -= 30;
+	  _boost = 50;
+	  _addop = 0;
+	}
+    }
+  else if (key == SLOW && _addop == 1)
+    {
+      if (_slow == 0)
+	{
+	  _speed += 30;
+	  _slow = 50;
+	  _addop = 0;
+	}
+    }
+  if (key == SLOW || key == BOOST)
+    return (OTHER);
+  else
+    return (key);
+}
+
 void        Nibbler::startGame()
 {
   Key     key;
@@ -59,9 +87,22 @@ void        Nibbler::startGame()
   srand(time(NULL));
   while (42)
     {
+      if (_boost > 0)
+	{
+	_boost--;
+	if (_boost == 0)
+	  _speed += 30;
+	}
+      if (_slow > 0)
+	{
+	  _slow--;
+	  if (_slow == 0)
+	  _speed -= 30;
+	}
       key = this->graphic->refresh_screen(this->pos, _speed, _score);
       if (key == ESCAPE)
 	break;
+      key = handle_key(key);
       this->loopGame(key);
       if (this->looseGame())
         {
@@ -124,8 +165,9 @@ bool    Nibbler::looseGame()
         return (true);
     for (std::list<Pos>::iterator i = this->pos.begin(); i != head; ++i)
     {
-        if ((*i).state != FOOD && (*i).x == (*head).x && (*i).y == (*head).y)
-            return (true);
+      if ((*i).state != FOOD && (*i).x == (*head).x && (*i).y == (*head).y && 
+	  (*i).state != BONUS && (*i).x == (*head).x && (*i).y == (*head).y)
+	return (true);
     }
     return (false);
 }
@@ -134,17 +176,24 @@ void    Nibbler::putNewFood()
 {
     bool freePos[this->width * this->height];
     int  test;
+    int	test2;
 
-    if (_speed > 59)
+    std::list<Pos>::iterator it = this->pos.begin();
+    if ((*it).state == 15 && _addop == 0)
+      _addop = 1;
+    if (_speed > 59 && _boost == 0 && _slow == 0)
       _speed -= 30;
     _score++;
     this->pos.erase(this->pos.begin());
     for(int i = 0; i < this->width * this->height; ++i)
-        freePos[i] = true;
+      freePos[i] = true;
     for (std::list<Pos>::iterator i = this->pos.begin(); i != this->pos.end(); ++i)
-        freePos[(*i).x * this->width + (*i).y] = false;
+      freePos[(*i).x * this->width + (*i).y] = false;
     do {
-        test = rand() % (this->width * this->height - 1);
+      test = rand() % (this->width * this->height - 1);
     } while (!freePos[test]);
-    this->pos.push_front((Pos){test % this->width, test / this->width, FOOD});
+    {
+      test2 = (rand()%2) + 14;
+      this->pos.push_front((Pos){test % this->width, test / this->width, (State)(test2)});
+    }
 }

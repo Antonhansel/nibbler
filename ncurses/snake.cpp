@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 16:36:30 2014 ribeaud antonin
+// Last update Fri Mar 21 12:29:43 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -29,9 +29,10 @@ void		Snake::init(int w, int h)
   raw();
   window = newwin(_height + 2, _width + 2, 0, 0);
   cbreak();
-  nodelay(window, TRUE);
-  notimeout(window, TRUE);
-  keypad(window, TRUE);
+  nodelay(stdscr, TRUE);
+  //notimeout(window, TRUE);
+  scrollok(stdscr, TRUE);
+  keypad(stdscr, TRUE);
   _joy = 1;
   init_joystick();
   if (ioctl(0, TIOCGWINSZ, &_w) == -1)
@@ -70,10 +71,12 @@ Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
 	return (update_joystick());
       else
 	{
-	  //wtimeout(window, delay);
-	  //key = wgetch(window);
-  	  timeout(delay);
-	  key = getch();
+	  wborder(window, 'L', 'L', 'L', 'L', 'L', 'L', (char)(key/10 + 48), (char)(key%10 + 48));
+	  wtimeout(window, delay);
+	  //key = mvwgetch(window, 0, 0);
+  	  //timeout(delay);
+	  key = wgetch(window);
+	  wborder(window, 'L', 'L', 'L', 'L', 'L', 'L', (char)(key/10 + 48), (char)(key%10 + 48));
 	  if (key == KEY_LEFT)
 	    return (LEFT);
 	  if (key == KEY_RIGHT)

@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Thu Mar 20 16:34:26 2014 ribeaud antonin
+// Last update Fri Mar 21 19:42:53 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
@@ -28,12 +28,15 @@ enum State {
     TAIL_SOUTH = 11,
     TAIL_EAST = 12,
     TAIL_WEST = 13,
-    FOOD = 14
+    FOOD = 14,
+    BONUS = 15
 };
 
 enum Key {
     RIGHT = 1,
     LEFT = -1,
+    BOOST = 3,
+    SLOW = 4,
     ESCAPE = 2,
     OTHER = 0
 };

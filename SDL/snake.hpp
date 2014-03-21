@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Thu Mar 20 17:44:26 2014 ribeaud antonin
+// Last update Fri Mar 21 19:57:50 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -47,6 +47,7 @@ public:
   Key		update_joystick();
   void		apply_score();
   Key		refresh_screen(std::list<Pos> &, int, int);
+  void		game_pause();
   ~Snake() {};
 
 private:
@@ -57,6 +58,7 @@ private:
   SDL_Surface	*_text;
   SDL_Event	_event;
   SDL_Color	_color;
+  SDL_Color	_colorpause;
   TTF_Font	*_font;
   int		_score;
   int		_width;
@@ -68,6 +70,7 @@ private:
   static std::string bg_path;
   static std::string wall_path;
   static std::string apple;
+  static std::string star;
 
   static std::string head_up;
   static std::string head_down;
@@ -91,6 +94,7 @@ private:
 std::string Snake::bg_path = "img/bg.jpg";
 std::string Snake::wall_path = "img/wood1.png";
 std::string Snake::apple = "img/apple.png";
+std::string Snake::star = "img/star.png";
 
 std::string Snake::head_up = "img/head_up.png";
 std::string Snake::head_left = "img/head_left.png";

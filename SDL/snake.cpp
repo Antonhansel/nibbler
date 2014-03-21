@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 17:45:24 2014 ribeaud antonin
+// Last update Fri Mar 21 20:02:48 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -20,6 +20,9 @@ void		Snake::init_font()
   _color.r = 255;
   _color.g = 0;
   _color.b = 0;
+  _colorpause.r = 255;
+  _colorpause.g = 255;
+  _colorpause.b = 255;
 }
 
 void		Snake::init(int w, int h)
@@ -164,6 +167,7 @@ void		Snake::load()
   _bg = load_image(Snake::bg_path);
   _wall = load_image(Snake::wall_path);
   _snake[FOOD] = load_image(Snake::apple);
+  _snake[BONUS] = load_image(Snake::star);
 
   _snake[HEAD_NORTH] = load_image(Snake::head_up);
   _snake[HEAD_SOUTH] = load_image(Snake::head_down);
@@ -193,9 +197,25 @@ void		Snake::init_joystick()
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
 
+void		Snake::game_pause()
+{
+  struct js_event	e;
+
+  _text = TTF_RenderText_Solid(_font, "PAUSE", _color);
+  apply_surface((WIDTH/2) - BPP * 3, (HEIGHT/2) + BPP * 3, _text, _screen);
+  my_flip();
+  while (42)
+    {
+      if (read(_fd, &e, sizeof(struct js_event)) > 0 
+	  && (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 5)
+	break;
+    }
+}
+
 Key		Snake::update_joystick()
 {
   struct js_event	e;
+  int			button;
 
   while (read(_fd, &e, sizeof(struct js_event)) > 0)
     {
@@ -205,7 +225,16 @@ Key		Snake::update_joystick()
 	    {
 	      if (e.number == 8)
 		return (ESCAPE);
-	    }	
+	      if (e.number == 6)
+		return (BOOST);
+	      if (e.number == 7)
+		return (SLOW);
+	      if (e.number == 4)
+		{
+		  game_pause();
+		  return (OTHER);
+		}
+	    }
 	}
       else
 	{

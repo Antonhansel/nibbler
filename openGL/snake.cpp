@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Mar 20 17:44:00 2014 ribeaud antonin
+// Last update Fri Mar 21 18:07:59 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -92,11 +92,11 @@ void		Snake::draw_img(std::list<Pos> &list)
   my_flip();
 }
 
-void		Snake::apply_score()
+void			Snake::apply_score()
 {
-  std::stringstream newscore;
-  std::string	    temp;
-  char const * temp2;
+  std::stringstream	newscore;
+  std::string		temp;
+  char const *		temp2;
 
   newscore << "Score: " <<  _score;
   temp = newscore.str();
@@ -167,10 +167,12 @@ void		Snake::draw_block(int x, int y, int state)
 
   if (state == 14)
     glColor3ub(255,0,0);
-  else if (state == -1)
+  else if (state == -1 || state == 15)
     glColor3ub(rand()%255, rand()%255, rand()%255);
   else if (state <= 3)
     glColor3ub(0 , 0, 255);
+  else if (state == 6 || state == 7 || state == 8 || state == 9)
+    glColor3ub(255, 150, 255);
   else
     glColor3ub(50 , 0, 190);
   glVertex3d(x,     y,      1);
@@ -278,7 +280,7 @@ void		Snake::init_joystick()
 {
   _fd = open("/dev/input/js1", O_NONBLOCK);
   if (_fd > 0)
-      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+    std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
   else
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
