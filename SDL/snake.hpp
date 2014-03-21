@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Fri Mar 21 19:57:50 2014 ribeaud antonin
+// Last update Fri Mar 21 20:33:00 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -47,7 +47,7 @@ public:
   Key		update_joystick();
   void		apply_score();
   Key		refresh_screen(std::list<Pos> &, int, int);
-  void		game_pause();
+  Key		game_pause();
   ~Snake() {};
 
 private:
@@ -59,7 +59,8 @@ private:
   SDL_Event	_event;
   SDL_Color	_color;
   SDL_Color	_colorpause;
-  TTF_Font	*_font;
+  TTF_Font	*_fontscore;
+  TTF_Font	*_fontmenu;
   int		_score;
   int		_width;
   int		_height;

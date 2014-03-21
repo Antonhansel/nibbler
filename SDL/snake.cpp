@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Fri Mar 21 20:02:48 2014 ribeaud antonin
+// Last update Fri Mar 21 20:42:42 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -16,7 +16,8 @@
 
 void		Snake::init_font()
 {
-  _font = TTF_OpenFont("img/snake.ttf", 80);
+  _fontscore = TTF_OpenFont("img/snake.ttf", 60);
+  _fontmenu = TTF_OpenFont("img/menu.ttf", 60);
   _color.r = 255;
   _color.g = 0;
   _color.b = 0;
@@ -99,7 +100,7 @@ void		Snake::apply_score()
   newscore << "Score: " <<  _score;
   temp = newscore.str();
   temp2 = (char*)temp.c_str();
-  _text = TTF_RenderText_Solid(_font, temp2, _color);
+  _text = TTF_RenderText_Solid(_fontscore, temp2, _color);
   apply_surface((WIDTH/2 - 64), 0, _text, _screen);
 }
 
@@ -197,18 +198,44 @@ void		Snake::init_joystick()
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
 
-void		Snake::game_pause()
+Key		Snake::game_pause()
 {
   struct js_event	e;
-
-  _text = TTF_RenderText_Solid(_font, "PAUSE", _color);
-  apply_surface((WIDTH/2) - BPP * 3, (HEIGHT/2) + BPP * 3, _text, _screen);
-  my_flip();
+  int		pos;
+  
+  pos = -1;
   while (42)
     {
-      if (read(_fd, &e, sizeof(struct js_event)) > 0 
-	  && (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 5)
-	break;
+      SDL_Delay(20);
+      if (pos == -1)
+	{
+	  _text = TTF_RenderText_Solid(_fontmenu, "RETURN TO GAME", _color);
+	  apply_surface((WIDTH/2) - BPP * 2, (HEIGHT/2) + BPP * 2, _text, _screen);
+	  _text = TTF_RenderText_Solid(_fontmenu, "QUIT", _colorpause);
+	  apply_surface((WIDTH/2) - BPP * 2, (HEIGHT/2) + BPP * 4, _text, _screen);
+	}
+      else
+	{
+	  _text = TTF_RenderText_Solid(_fontmenu, "RETURN TO GAME", _colorpause);
+	  apply_surface((WIDTH/2) - BPP * 2, (HEIGHT/2) + BPP * 2, _text, _screen);
+	  _text = TTF_RenderText_Solid(_fontmenu, "QUIT", _color);
+	  apply_surface((WIDTH/2) - BPP * 2, (HEIGHT/2) + BPP * 4, _text, _screen);
+	}
+      my_flip();
+      if (read(_fd, &e, sizeof(struct js_event)) > 0) 
+	{
+	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value > 32700)
+	    pos *= -1;
+	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value < -32700)
+	    pos *= -1;
+	  if ((e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 0)
+	    {
+	      if (pos == -1)
+		return (OTHER);
+	      else
+		return (ESCAPE);
+	    }
+	}
     }
 }
 
@@ -224,16 +251,7 @@ Key		Snake::update_joystick()
 	  if (e.value == 1)
 	    {
 	      if (e.number == 8)
-		return (ESCAPE);
-	      if (e.number == 6)
-		return (BOOST);
-	      if (e.number == 7)
-		return (SLOW);
-	      if (e.number == 4)
-		{
-		  game_pause();
-		  return (OTHER);
-		}
+		return (game_pause());
 	    }
 	}
       else
@@ -244,6 +262,16 @@ Key		Snake::update_joystick()
 		return (RIGHT);
 	      else if (e.value < -32700)
 		return (LEFT);
+	    }
+	  else if (e.number == 2)
+	    {
+	      if (e.value > 32700)
+		return (SLOW);
+	    }
+	  else if (e.number == 5)
+	    {
+	      if (e.value > 32700)
+		return (BOOST);
 	    }
 	}
     }
