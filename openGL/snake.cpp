@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Fri Mar 21 18:07:59 2014 ribeaud antonin
+// Last update Fri Mar 21 20:53:11 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -285,9 +285,23 @@ void		Snake::init_joystick()
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
 
+Key			Snake::game_pause()
+{
+  struct js_event	e;
+  int			pos;
+  
+  pos = -1;
+  while (42)
+    {
+      if (read(_fd, &e, sizeof(struct js_event)) > 0 && (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 8)
+	return (OTHER);
+    }
+}
+
 Key		Snake::update_joystick()
 {
   struct js_event	e;
+  int			button;
 
   while (read(_fd, &e, sizeof(struct js_event)) > 0)
     {
@@ -296,8 +310,8 @@ Key		Snake::update_joystick()
 	  if (e.value == 1)
 	    {
 	      if (e.number == 8)
-		return (ESCAPE);
-	    }	
+		return (game_pause());
+	    }
 	}
       else
 	{
@@ -307,6 +321,16 @@ Key		Snake::update_joystick()
 		return (LEFT);
 	      else if (e.value < -32700)
 		return (RIGHT);
+	    }
+	  else if (e.number == 2)
+	    {
+	      if (e.value > 32700)
+		return (SLOW);
+	    }
+	  else if (e.number == 5)
+	    {
+	      if (e.value > 32700)
+		return (BOOST);
 	    }
 	}
     }

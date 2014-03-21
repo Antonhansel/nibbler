@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Thu Mar 20 17:31:41 2014 ribeaud antonin
+// Last update Fri Mar 21 20:49:56 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -58,6 +58,7 @@ public:
   Key		update_joystick();
   void		apply_score();
   void		init_font();
+  Key		game_pause();
   ~Snake() {};
 
 private:
