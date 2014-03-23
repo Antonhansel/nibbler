@@ -5,29 +5,74 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Fri Mar 21 20:53:11 2014 ribeaud antonin
+// Last update Sun Mar 23 12:41:33 2014 ribeaud antonin
 //
 
 #include <error.h>
 #include "snake.hpp"
 
+GLuint		Snake::load_texture(int widthold, int heightold, char const *filename)
+{
+  GLuint	textureID;
+  unsigned char	header[54];
+  unsigned int	dataPos;
+  unsigned int	width, height;
+  unsigned int	imageSize;
+  unsigned char *data;
+  FILE	*file = fopen(filename, "rb");
+
+  if (!file)
+    std::cout << "Cannot load " << filename << std::endl;
+  //le header doit faire 54 bytes
+  if (fread(header, 1, 54, file)!= 54)
+    std::cout << filename << " is not a BMP file!" << std::endl;
+  //le header doit commencer par BM --> hexdump *.bmp
+  if (header[0] != 'B' || header[1] != 'M')
+    std::cout << filename << ": wrong header, first two bytes must start with BM" << std::endl;
+  dataPos = *(int*)&(header[0x0A]);
+  imageSize = *(int*)&(header[0x22]);
+  width = *(int*)&(header[0x12]);
+  height = *(int*)&(header[0x16]);
+  if (imageSize == 0)
+    imageSize = width * height * 3;
+  if (dataPos == 0)
+    dataPos = 54;
+  data = new unsigned char[imageSize];
+  fread(data, 1, imageSize, file);
+  fclose(file);
+
+  glGenTextures(1, &textureID); 
+  glBindTexture(GL_TEXTURE_2D, textureID);
+  glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
+
 void		Snake::init(int w, int h)
 {
   _width = w;
   _height = h;
+  _start = 1;
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
-      !(_screen = SDL_SetVideoMode(SP_SIZE * (_width + 2), SP_SIZE * (_height + 2), BPP, SDL_OPENGL)))
+      !(_screen = SDL_SetVideoMode(SP_SIZE * (_width + 2),
+				   SP_SIZE * (_height + 2), BPP, SDL_OPENGL)))
     error(1, 0, "Couldn't initialize Graphic Mode");
   SDL_WM_SetCaption(NAME, NULL);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(70, (double)((w+2) * 32)/((h+2) * 32), 1, 1000);
+  glClearDepth(1);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_COLOR_MATERIAL);
   _joy = -1;
-  init_joystick();
   _height -= 1;
   _width -= 1;
   _help = -1;
+  init_joystick();
+  glGenTextures(1, &_walltexture);
+  _walltexture = load_texture(32, 32, "img/bg.bmp");
 }
 
 Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
@@ -36,35 +81,66 @@ Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
 
   _score = score;
   _delay = delay;
-  draw_img(list);
-  usleep(delay * 1000);
-  if (_fd > 0 && _joy == 1)
-    return (update_joystick());
+  if (delay == 0)
+    end_sdl();
   else
     {
-      while (SDL_PollEvent(&_event))
+      if (_start > 0)
+	fancy_starter(list);
+      draw_img(list);
+      usleep(delay * 1000);
+      if (_fd > 0 && _joy == 1)
+	return (update_joystick());
+      else
 	{
-	  if (_event.type == SDL_QUIT)
-	    return (ESCAPE);
-	  if (_event.type == SDL_KEYDOWN)
+	  while (SDL_PollEvent(&_event))
 	    {
-	      if (_event.key.keysym.sym == SDLK_LEFT)
-		return (RIGHT);
-	      if (_event.key.keysym.sym == SDLK_RIGHT)
-		return (LEFT);
-	      if (_event.key.keysym.sym == SDLK_ESCAPE)
+	      if (_event.type == SDL_QUIT)
+		return (ESCAPE);
+	      if (_event.type == SDL_KEYDOWN)
 		{
-		  end_sdl();
-		  return (ESCAPE);
+		  if (_event.key.keysym.sym == SDLK_LEFT)
+		    return (RIGHT);
+		  if (_event.key.keysym.sym == SDLK_RIGHT)
+		    return (LEFT);
+		  if (_event.key.keysym.sym == SDLK_ESCAPE)
+		    {
+		      end_sdl();
+		      return (ESCAPE);
+		    }
+		  if (_event.key.keysym.sym == SDLK_UP)
+		    _help *=-1;
+		  if (_event.key.keysym.sym == SDLK_DOWN)
+		    _joy *=-1;
 		}
-	      if (_event.key.keysym.sym == SDLK_UP)
-		_help *=-1;
-	      if (_event.key.keysym.sym == SDLK_DOWN)
-		_joy *=-1;
 	    }
 	}
     }
   return (OTHER);
+}
+
+void		Snake::fancy_starter(std::list<Pos> &list)
+{
+  int		x = 20;
+  int		rotate = _width - 5;
+  _start = x;
+  while (_start > 0)
+    {
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      SDL_Delay(70);
+      if (_start % 4 == 0)
+	rotate++;
+      gluLookAt(-_width/5, -_width/5, rotate, (_height/2 - _height/8), 
+		(_width/2 - _height/8), x, x, x, 1);
+      x--;
+      apply_bg();
+      apply_wall();
+      apply_snake(list);
+      apply_score();
+      my_flip();
+      _start--;
+    }
 }
 
 void		Snake::draw_img(std::list<Pos> &list)
@@ -82,7 +158,7 @@ void		Snake::draw_img(std::list<Pos> &list)
 	}
     }
   if (mode == 0)
-    gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _height/8), 0, 0, 0, 1);
+    gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _width/8), 0, 0, 0, 1);
   apply_bg();
   apply_wall();
   apply_snake(list);
@@ -118,15 +194,18 @@ void		Snake::apply_wall()
 }
 
 void		Snake::apply_bg()
-{  
+{
   glMatrixMode(GL_MODELVIEW);
   glBegin(GL_QUADS);
   
   glColor3ub(120, 255, 120);
-  glVertex3d(-1,          -1, -1);
+  /*glTexCoord2d(0.0,0.0);*/  glVertex3d(-1,          -1, -1);
+  // glTexCoord2d(1.0,0.0);
   glVertex3d(-1,          _height + 2, -1);
   glColor3ub(50, 255, 50);
+  // glTexCoord2d(1.0,1.0);
   glVertex3d(_width + 2,  _height + 2, -1);
+  // glTexCoord2d(0.0,1.0);
   glVertex3d(_height + 2, -1, -1);
 
   glEnd();
@@ -163,6 +242,8 @@ void		Snake::loadColor(int i, int state)
 void		Snake::draw_block(int x, int y, int state)
 {
   glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glBindTexture(GL_TEXTURE_2D, _walltexture);
   glBegin(GL_QUADS);
 
   if (state == 14)
@@ -206,10 +287,32 @@ void		Snake::draw_block(int x, int y, int state)
   glVertex3d(x + 1, y + 1,  1);
 
   glEnd();
+  glPopMatrix();
 }
 
 void		Snake::end_sdl()
 {
+  int		x = 0;
+  int		rotate = _width;
+
+  _start = x;
+  while (_start < 20)
+    {
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      SDL_Delay(70);
+      if (_start % 4 == 0)
+	rotate--;
+      gluLookAt(-_width/5, -_width/5, rotate, (_height/2 - _height/8), 
+		(_width/2 - _height/8), x, x, x, 1);
+      x++;
+      apply_bg();
+      apply_wall();
+      apply_score();
+      my_flip();
+      _start++;
+    }
+  glDeleteTextures(1, &_walltexture);
   SDL_Quit();
 }
 

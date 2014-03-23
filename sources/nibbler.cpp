@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 21 19:42:45 2014 ribeaud antonin
+// Last update Sat Mar 22 22:15:27 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -89,15 +89,15 @@ void        Nibbler::startGame()
     {
       if (_boost > 0)
 	{
-	_boost--;
-	if (_boost == 0)
-	  _speed += 30;
+	  _boost--;
+	  if (_boost == 0)
+	    _speed += 30;
 	}
       if (_slow > 0)
 	{
 	  _slow--;
 	  if (_slow == 0)
-	  _speed -= 30;
+	    _speed -= 30;
 	}
       key = this->graphic->refresh_screen(this->pos, _speed, _score);
       if (key == ESCAPE)

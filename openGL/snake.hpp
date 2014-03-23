@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Fri Mar 21 20:49:56 2014 ribeaud antonin
+// Last update Sun Mar 23 12:26:30 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -59,10 +59,13 @@ public:
   void		apply_score();
   void		init_font();
   Key		game_pause();
+  GLuint	load_texture(int width, int height, char const *filename);
+  void		fancy_starter(std::list<Pos> &list);
+  void		apply_lights();
   ~Snake() {};
 
 private:
-  GLuint	_bg;
+  GLuint	_walltexture;
   SDL_Event	_event;
   SDL_Surface	*_screen;
   SDL_Surface	*_text;
@@ -76,6 +79,7 @@ private:
   int		_score;
   int		_fd;
   int		_joy;
+  int		_start;
 };
 
 #endif /*!_SNAKE_HPP*/
