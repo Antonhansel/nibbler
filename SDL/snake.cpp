@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Fri Mar 21 20:53:48 2014 ribeaud antonin
+// Last update Mon Mar 24 16:02:08 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -224,9 +224,9 @@ Key		Snake::game_pause()
       my_flip();
       if (read(_fd, &e, sizeof(struct js_event)) > 0) 
 	{
-	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value > 32700)
+	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value >= 32767)
 	    pos *= -1;
-	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value < -32700)
+	  if (!(e.type &= JS_EVENT_BUTTON) && e.number == 7 && e.value <= -32767)
 	    pos *= -1;
 	  if ((e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 0)
 	    {

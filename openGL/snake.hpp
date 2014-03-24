@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Sun Mar 23 12:26:30 2014 ribeaud antonin
+// Last update Mon Mar 24 16:00:01 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -40,11 +40,14 @@ public:
   SDL_Surface	*load_image(std::string &filename);
   void		apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest);
   void		my_flip();
-  void		apply_wall();
-  void		apply_bg();
-  void		apply_snake(std::list<Pos>&);
+  GLuint	load_texture(int width, int height, char const *filename);
   void		draw_img(std::list<Pos>&);
+
   void		init(int w, int h);
+  void		init_font();
+  void		init_joystick();
+  void		init_lights();
+
   void		end_sdl();
   void		load();
   void		draw_block(int x, int y, int state);
@@ -54,14 +57,17 @@ public:
   GLuint       	loadTexture(const char *filename, bool useMipMap);
   SDL_Surface	*flipSurface(SDL_Surface * surface);
   void		loadColor(int i, int state);
-  void		init_joystick();
   Key		update_joystick();
+
   void		apply_score();
-  void		init_font();
-  Key		game_pause();
-  GLuint	load_texture(int width, int height, char const *filename);
-  void		fancy_starter(std::list<Pos> &list);
+  void		apply_wall();
+  void		apply_bg();
+  void		apply_snake(std::list<Pos>&);
   void		apply_lights();
+
+  Key		game_pause();
+  void		fancy_starter(std::list<Pos> &list);
+
   ~Snake() {};
 
 private:
@@ -71,6 +77,9 @@ private:
   SDL_Surface	*_text;
   TTF_Font	*_font;
   SDL_Color	_color;
+  SDL_Color	_colorpause;
+  TTF_Font	*_fontscore;
+  TTF_Font	*_fontmenu;
   int		_width;
   int		_height;
   Key		_key;

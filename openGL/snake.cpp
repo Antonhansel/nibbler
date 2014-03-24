@@ -5,48 +5,15 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sun Mar 23 12:41:33 2014 ribeaud antonin
+// Last update Mon Mar 24 17:21:12 2014 ribeaud antonin
 //
 
 #include <error.h>
 #include "snake.hpp"
 
-GLuint		Snake::load_texture(int widthold, int heightold, char const *filename)
-{
-  GLuint	textureID;
-  unsigned char	header[54];
-  unsigned int	dataPos;
-  unsigned int	width, height;
-  unsigned int	imageSize;
-  unsigned char *data;
-  FILE	*file = fopen(filename, "rb");
-
-  if (!file)
-    std::cout << "Cannot load " << filename << std::endl;
-  //le header doit faire 54 bytes
-  if (fread(header, 1, 54, file)!= 54)
-    std::cout << filename << " is not a BMP file!" << std::endl;
-  //le header doit commencer par BM --> hexdump *.bmp
-  if (header[0] != 'B' || header[1] != 'M')
-    std::cout << filename << ": wrong header, first two bytes must start with BM" << std::endl;
-  dataPos = *(int*)&(header[0x0A]);
-  imageSize = *(int*)&(header[0x22]);
-  width = *(int*)&(header[0x12]);
-  height = *(int*)&(header[0x16]);
-  if (imageSize == 0)
-    imageSize = width * height * 3;
-  if (dataPos == 0)
-    dataPos = 54;
-  data = new unsigned char[imageSize];
-  fread(data, 1, imageSize, file);
-  fclose(file);
-
-  glGenTextures(1, &textureID); 
-  glBindTexture(GL_TEXTURE_2D, textureID);
-  glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-}
+/*#######################################*/
+/*############ INIT AND END #############*/
+/*#######################################*/
 
 void		Snake::init(int w, int h)
 {
@@ -61,18 +28,66 @@ void		Snake::init(int w, int h)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(70, (double)((w+2) * 32)/((h+2) * 32), 1, 1000);
+  if (TTF_Init() == -1)
+    error(1, 0, "Couldn't initialize fonts");
+  glEnable(GL_TEXTURE_2D);
+  glMatrixMode (GL_MODELVIEW);
+  _joy = -1;
+  _height -= 1;
+  _width -= 1;
+  _help = -1;
+  init_lights();
+  init_joystick();
+  init_font();
+  glGenTextures(1, &_walltexture);
+  _walltexture = load_texture(32, 32, "img/bg.bmp");
+}
+
+void		Snake::init_font()
+{
+  _fontscore = TTF_OpenFont("img/snake.ttf", 60);
+  _fontmenu = TTF_OpenFont("img/menu.ttf", 60);
+  _color.r = 255;
+  _color.g = 0;
+  _color.b = 0;
+  _colorpause.r = 255;
+  _colorpause.g = 255;
+  _colorpause.b = 255;
+}
+
+void		Snake::init_lights()
+{
   glClearDepth(1);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_COLOR_MATERIAL);
-  _joy = -1;
-  _height -= 1;
-  _width -= 1;
-  _help = -1;
-  init_joystick();
-  glGenTextures(1, &_walltexture);
-  _walltexture = load_texture(32, 32, "img/bg.bmp");
+}
+
+void		Snake::end_sdl()
+{
+  int		x = 0;
+  int		rotate = _width;
+
+  _start = x;
+  while (_start < 20)
+    {
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      SDL_Delay(70);
+      if (_start % 4 == 0)
+	rotate--;
+      gluLookAt(-_width/5, -_width/5, rotate, (_height/2 - _height/8), 
+		(_width/2 - _height/8), x, x, x, 1);
+      x++;
+      apply_bg();
+      apply_wall();
+      apply_score();
+      my_flip();
+      _start++;
+    }
+  glDeleteTextures(1, &_walltexture);
+  SDL_Quit();
 }
 
 Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
@@ -123,6 +138,7 @@ void		Snake::fancy_starter(std::list<Pos> &list)
 {
   int		x = 20;
   int		rotate = _width - 5;
+
   _start = x;
   while (_start > 0)
     {
@@ -137,10 +153,24 @@ void		Snake::fancy_starter(std::list<Pos> &list)
       apply_bg();
       apply_wall();
       apply_snake(list);
-      apply_score();
       my_flip();
       _start--;
     }
+}
+
+
+/*#######################################*/
+/*############ DRAW FUNCS ###############*/
+/*#######################################*/
+
+void		Snake::apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest)
+{
+  SDL_Rect	offset;
+
+  offset.x = x;
+  offset.y = y;
+  if (SDL_BlitSurface(src, NULL, dest, &offset) == -1)
+    error(1, 0, "Couldn't Blit surface");
 }
 
 void		Snake::draw_img(std::list<Pos> &list)
@@ -154,11 +184,13 @@ void		Snake::draw_img(std::list<Pos> &list)
       if ((*i).state >= 0 && (*i).state <= 3 && _delay <= 30)
   	{
   	  mode = 1;
-	  gluLookAt(-_width/5, -_width/5, _width, (*i).x-((*i).x/16), (*i).y-((*i).y/8), 0, 0, 0, 1);
+	  gluLookAt(-_width/5, -_width/5, _width, (*i).x-((*i).x/16), 
+		    (*i).y-((*i).y/8), 0, 0, 0, 1);
 	}
     }
   if (mode == 0)
-    gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), (_width/2 - _width/8), 0, 0, 0, 1);
+    gluLookAt(-_width/5, -_width/5, _width, (_height/2 - _height/8), 
+	      (_width/2 - _width/8), 0, 0, 0, 1);
   apply_bg();
   apply_wall();
   apply_snake(list);
@@ -168,15 +200,22 @@ void		Snake::draw_img(std::list<Pos> &list)
   my_flip();
 }
 
-void			Snake::apply_score()
-{
-  std::stringstream	newscore;
-  std::string		temp;
-  char const *		temp2;
 
+/*#######################################*/
+/*############ APPLY FUNCS ##############*/
+/*#######################################*/
+
+void		Snake::apply_score()
+{
+  std::stringstream newscore;
+  std::string	    temp;
+  char const * temp2;
+  
   newscore << "Score: " <<  _score;
   temp = newscore.str();
   temp2 = (char*)temp.c_str();
+  _text = TTF_RenderText_Solid(_fontscore, temp2, _color);
+  apply_surface((WIDTH/2 - 64), 0, _text, _screen);
 }
 
 void		Snake::apply_wall()
@@ -199,14 +238,11 @@ void		Snake::apply_bg()
   glBegin(GL_QUADS);
   
   glColor3ub(120, 255, 120);
-  /*glTexCoord2d(0.0,0.0);*/  glVertex3d(-1,          -1, -1);
-  // glTexCoord2d(1.0,0.0);
-  glVertex3d(-1,          _height + 2, -1);
+  glTexCoord2d(0.0,0.0); glVertex3d(-1,          -1, -1);
+  glTexCoord2d(1.0,0.0); glVertex3d(-1,          _height + 2, -1);
   glColor3ub(50, 255, 50);
-  // glTexCoord2d(1.0,1.0);
-  glVertex3d(_width + 2,  _height + 2, -1);
-  // glTexCoord2d(0.0,1.0);
-  glVertex3d(_height + 2, -1, -1);
+  glTexCoord2d(1.0,1.0); glVertex3d(_width + 2,  _height + 2, -1);
+  glTexCoord2d(0.0,1.0); glVertex3d(_height + 2, -1, -1);
 
   glEnd();
 }
@@ -243,7 +279,7 @@ void		Snake::draw_block(int x, int y, int state)
 {
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
-  glBindTexture(GL_TEXTURE_2D, _walltexture);
+  //glBindTexture(GL_TEXTURE_2D, _walltexture);
   glBegin(GL_QUADS);
 
   if (state == 14)
@@ -256,6 +292,7 @@ void		Snake::draw_block(int x, int y, int state)
     glColor3ub(255, 150, 255);
   else
     glColor3ub(50 , 0, 190);
+
   glVertex3d(x,     y,      1);
   glVertex3d(x,     y,     -1);
   glVertex3d(x + 1, y,     -1);
@@ -287,33 +324,19 @@ void		Snake::draw_block(int x, int y, int state)
   glVertex3d(x + 1, y + 1,  1);
 
   glEnd();
-  glPopMatrix();
+  //glPopMatrix();
 }
 
-void		Snake::end_sdl()
-{
-  int		x = 0;
-  int		rotate = _width;
+/*#######################################*/
+/*################ MISC #################*/
+/*#######################################*/
 
-  _start = x;
-  while (_start < 20)
-    {
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-      SDL_Delay(70);
-      if (_start % 4 == 0)
-	rotate--;
-      gluLookAt(-_width/5, -_width/5, rotate, (_height/2 - _height/8), 
-		(_width/2 - _height/8), x, x, x, 1);
-      x++;
-      apply_bg();
-      apply_wall();
-      apply_score();
-      my_flip();
-      _start++;
-    }
-  glDeleteTextures(1, &_walltexture);
-  SDL_Quit();
+extern "C"
+{
+  IGraphic	*init_lib()
+  {
+    return (new Snake);
+  }
 }
 
 void		Snake::my_flip()
@@ -371,13 +394,9 @@ void		Snake::load()
   glEnd();
 }
 
-extern "C"
-{
-  IGraphic	*init_lib()
-  {
-    return (new Snake);
-  }
-}
+/*#######################################*/
+/*############## JOYSTICK ###############*/
+/*#######################################*/
 
 void		Snake::init_joystick()
 {
@@ -396,12 +415,14 @@ Key			Snake::game_pause()
   pos = -1;
   while (42)
     {
-      if (read(_fd, &e, sizeof(struct js_event)) > 0 && (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 8)
+      usleep(100);
+      if (read(_fd, &e, sizeof(struct js_event)) > 0 && 
+	  (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 8)
 	return (OTHER);
     }
 }
 
-Key		Snake::update_joystick()
+Key			Snake::update_joystick()
 {
   struct js_event	e;
   int			button;
@@ -438,4 +459,43 @@ Key		Snake::update_joystick()
 	}
     }
   return (OTHER);
+}
+
+GLuint		Snake::load_texture(int widthold, int heightold, char const *filename)
+{
+  GLuint	textureID;
+  unsigned char	header[54];
+  unsigned int	dataPos;
+  unsigned int	width, height;
+  unsigned int	imageSize;
+  unsigned char *data;
+  FILE		*file = fopen(filename, "rb");
+
+  if (!file)
+    std::cout << "Cannot load " << filename << std::endl;
+  //le header doit faire 54 bytes
+  if (fread(header, 1, 54, file)!= 54)
+    std::cout << filename << " is not a BMP file!" << std::endl;
+  //le header doit commencer par BM --> hexdump *.bmp
+  if (header[0] != 'B' || header[1] != 'M')
+    std::cout << filename << ": wrong header, first two bytes must start with BM" << std::endl;
+  dataPos = *(int*)&(header[0x0A]);
+  imageSize = *(int*)&(header[0x22]);
+  width = *(int*)&(header[0x12]);
+  height = *(int*)&(header[0x16]);
+  if (imageSize == 0)
+    imageSize = width * height * 3;
+  if (dataPos == 0)
+    dataPos = 54;
+  data = new unsigned char[imageSize];
+  fread(data, 1, imageSize, file);
+  fclose(file);
+  glGenTextures(1, &textureID); 
+  glBindTexture(GL_TEXTURE_2D, textureID);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
 }
