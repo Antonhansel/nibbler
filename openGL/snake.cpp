@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Tue Mar 25 17:38:32 2014 ribeaud antonin
+// Last update Wed Mar 26 16:25:08 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -31,8 +31,6 @@ void		Snake::draw_img(std::list<Pos> &list) const
 
 Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
 {
-  Key		key;
-
   _score = score;
   _delay = delay;
   if (delay == 0)
@@ -102,7 +100,7 @@ void		Snake::init_lights() const
   glEnable(GL_COLOR_MATERIAL);
 }
 
-void		Snake::end_opengl(const std::list<Pos> &list)
+void		Snake::end_opengl(std::list<Pos> &list)
 {
   camera_movements(0, list);
 }
@@ -123,7 +121,7 @@ void		Snake::set_values()
   _texture[17] = load_texture("img/bg.bmp");
 }
 
-void		Snake::camera_movements(const int &state, const std::list<Pos> &list)
+void		Snake::camera_movements(const int &state, std::list<Pos> &list)
 {
   int		x;
   int		rotate;
@@ -163,6 +161,7 @@ void		Snake::camera_movements(const int &state, const std::list<Pos> &list)
       glEnable(GL_TEXTURE_2D);
       apply_bg();
       apply_wall();
+      apply_snake(list);
       glDisable(GL_TEXTURE_2D);
       my_flip();
     }
@@ -274,9 +273,7 @@ void		Snake::init_joystick()
 Key			Snake::game_pause() const
 {
   struct js_event	e;
-  int			pos;
-  
-  pos = -1;
+
   while (42)
     {
       usleep(100);
@@ -289,7 +286,6 @@ Key			Snake::game_pause() const
 Key			Snake::update_joystick() const
 {
   struct js_event	e;
-  int			button;
 
   while (read(_fd, &e, sizeof(struct js_event)) > 0)
     {
@@ -327,7 +323,6 @@ Key			Snake::update_joystick() const
 
 GLuint		Snake::load_texture(char const *filename) const
 {
-  static	int i = 0;
   GLuint	textureID;
   unsigned char	header[54];
   unsigned int	dataPos;

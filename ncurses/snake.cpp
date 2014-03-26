@@ -5,61 +5,64 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Tue Mar 25 17:37:23 2014 ribeaud antonin
+// Last update Wed Mar 26 18:52:19 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
 
-extern "C"
-{
-  IGraphic	*init_lib()
-  {
-    return (new Snake);
-  }
-}
-
 void		Snake::init(const int &w, const int &h)
 {
+
   _width = w;
   _height = h;
   initscr();
   clear();
   noecho();
-  curs_set(0);
-  raw();
-  window = newwin(_height + 2, _width + 2, 0, 0);
   cbreak();
   nodelay(stdscr, TRUE);
-  //notimeout(window, TRUE);
-  scrollok(stdscr, TRUE);
+  nodelay(window, TRUE);
+  score = newwin(3, _width + 1, 0, 0);
+  window = newwin(_height, _width + 1, 3, 0);
   keypad(stdscr, TRUE);
+  keypad(window, TRUE);
   _joy = 1;
+  curs_set(0);
   init_joystick();
-  if (ioctl(0, TIOCGWINSZ, &_w) == -1)
-    error(1, 0, "ioctl failed");
   testsize();
   wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
+  wborder(score, '|', '|', '-', '-', '+', '+', '+', '+');
   my_flip();
 }
 
 void		Snake::testsize()
 {
-  while (_w.ws_row < _height || _w.ws_col < _width)
+  struct   winsize _w;
+
+  if (ioctl(1, TIOCGWINSZ, &_w) == -1)
+    error(1, 0, "ioctl failed");
+  if (_w.ws_row < _height + 1 || _w.ws_col < _width + 4)
     {
-      wclear(window);
-      clear();
-      move(0, 0);
-      addstr("Resize your window");
-      refresh();
-      if (ioctl(0, TIOCGWINSZ, &_w) == -1)
-      	error(1, 0, "ioctl failed");
+      endwin();
+      while (_w.ws_row < _height + 1 || _w.ws_col < _width + 4)
+	{
+	  wclear(window);
+	  clear();
+	  move(0, 0);
+	  addstr("Resize your window");
+	  refresh();
+	  if (ioctl(1, TIOCGWINSZ, &_w) == -1)
+	    error(1, 0, "ioctl failed");
+	}
+      score = newwin(3, _width + 1, 0, 0);
+      window = newwin(_height, _width + 1, 3, 0);
     }
 }
 
 Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
 {
   int	key;
-  
+
+  _score = score;
   usleep(delay * 1000);
   key = 0;
   if (delay == 0)
@@ -71,17 +74,13 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 	return (update_joystick());
       else
 	{
-	  wborder(window, 'L', 'L', 'L', 'L', 'L', 'L', (char)(key/10 + 48), (char)(key%10 + 48));
-	  wtimeout(window, delay);
-	  //key = mvwgetch(window, 0, 0);
-  	  //timeout(delay);
-	  key = wgetch(window);
-	  wborder(window, 'L', 'L', 'L', 'L', 'L', 'L', (char)(key/10 + 48), (char)(key%10 + 48));
-	  if (key == KEY_LEFT)
+	  wtimeout(window, 0);
+	  key = getch();
+	  if (key == 0404)
 	    return (LEFT);
-	  if (key == KEY_RIGHT)
+	  if (key == 0405)
 	    return (RIGHT);
-	  if (key == KEY_UP)
+	  if (key == 27)
 	    {
 	      end();
 	      return (ESCAPE);
@@ -97,10 +96,20 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 
 void		Snake::draw_img(std::list<Pos> &list)
 {
+  std::stringstream	newscore;
+  std::string		temp;
+  char const		*temp2;
+  
+  newscore << "Score: " <<  _score;
+  temp = newscore.str();
+  temp2 = (char*)temp.c_str();
+
   testsize();
   wclear(window);
-  box(window, 0, 0);
+  wclear(score);
   wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
+  wborder(score, '|', '|', '-', '-', '+', '+', '+', '+');
+  mvwaddstr(score, 1, (_width/2) - 3, temp2);
   apply_snake(list);
   my_flip();
 }
@@ -113,30 +122,40 @@ void		Snake::apply_snake(std::list<Pos> &list)
 
 void	        Snake::apply_surface(int x, int y, State state)
 {
-  wmove(window, x, y);
+  static int blink = -1;
+
+  wmove(window, y++, x++);
   if (state == 14)
     waddch(window, 'O');
+  else if (state == 15)
+    {
+      if (blink == -1)
+	{
+	  wattron(window, A_REVERSE |A_BLINK);
+	  waddch(window, '0');
+	  wattroff(window, A_REVERSE | A_BLINK);
+	}
+      else
+	  waddch(window, '0');
+      blink *= -1;
+    }
   else
     waddch(window, ACS_CKBOARD);
-  //move(0, 0);
 }
 
 void		Snake::my_flip()
 {
   wrefresh(window);
+  wrefresh(score);
 }
 
-void		Snake::end()
+void		Snake::end() const
 {
   noraw();
   echo();
   nocbreak();
   endwin();
 }
-
-//
-// JOYSTICK
-//
 
 void		Snake::init_joystick()
 {
@@ -147,7 +166,7 @@ void		Snake::init_joystick()
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
 
-Key		Snake::update_joystick()
+Key		Snake::update_joystick() const
 {
   struct js_event	e;
 
@@ -176,4 +195,12 @@ Key		Snake::update_joystick()
 	}
     }
   return (OTHER);
+}
+
+extern "C"
+{
+  IGraphic	*init_lib()
+  {
+    return (new Snake);
+  }
 }

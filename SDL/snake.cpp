@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 13:01:46 2014 ribeaud antonin
+// Last update Wed Mar 26 18:08:17 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -247,7 +247,6 @@ Key		Snake::game_pause()
 Key		Snake::update_joystick()
 {
   struct js_event	e;
-  int			button;
 
   while (read(_fd, &e, sizeof(struct js_event)) > 0)
     {

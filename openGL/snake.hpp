@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Tue Mar 25 17:36:35 2014 ribeaud antonin
+// Last update Wed Mar 26 16:25:18 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -48,8 +48,8 @@ public:
   void		init_lights() const;
   void		set_values();
   GLuint	load_texture(char const *filename) const;
-  void		camera_movements(const int &state, const std::list <Pos> &list);
-  void		end_opengl(const std::list <Pos> &list);
+  void		camera_movements(const int &state, std::list <Pos> &list);
+  void		end_opengl(std::list <Pos> &list);
   /**
    **apply funcs
    **/

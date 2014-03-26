@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Fri Mar 14 13:13:43 2014 ribeaud antonin
-## Last update Mon Mar 24 17:04:25 2014 ribeaud antonin
+## Last update Wed Mar 26 16:21:49 2014 ribeaud antonin
 ##
 
 NAME_EXE        = nibbler
@@ -30,7 +30,7 @@ GL_FLAG        	= -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -lGLU -lGL -lpthread -
 OBJ_GL         	= $(SRC_GL:.cpp=.o)
 
 LDFLAGS         += -ldl
-CXXFLAGS        += -fPIC #-Wall -Werror -Werror
+CXXFLAGS        += -fPIC -Wall -Werror -Werror -Wextra
 
 CXX             = g++
 
