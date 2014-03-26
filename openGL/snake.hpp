@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Mon Mar 24 16:00:01 2014 ribeaud antonin
+// Last update Tue Mar 25 17:36:35 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -22,69 +22,56 @@
 # include <SDL/SDL_image.h>
 # include <GL/gl.h>
 # include <GL/glu.h>
-# include <GL/glut.h>
 # include <map>
 # include <unistd.h>
 # include "/usr/include/linux/joystick.h"
 # include "../sources/IGraphic.hh"
 
 #define NAME	"SNAKE_OPENGL"
-#define HEIGHT	632
-#define WIDTH	832
 #define	BPP	32
 #define SP_SIZE 32
 
 class Snake : public IGraphic
 {
 public:
-  SDL_Surface	*load_image(std::string &filename);
-  void		apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest);
-  void		my_flip();
-  GLuint	load_texture(int width, int height, char const *filename);
-  void		draw_img(std::list<Pos>&);
-
-  void		init(int w, int h);
-  void		init_font();
+  /**
+   **loop funcs
+   **/
+  void		draw_block(const int &x, const int &y, const int &state) const;
+  Key		refresh_screen(std::list<Pos> &, const int&, const int&);
+  void		my_flip() const;
+  void		draw_img(std::list<Pos>&) const;
+  /**
+   **init funcs
+   **/
+  void		init(const int &w, const int &h);
+  void		init_lights() const;
+  void		set_values();
+  GLuint	load_texture(char const *filename) const;
+  void		camera_movements(const int &state, const std::list <Pos> &list);
+  void		end_opengl(const std::list <Pos> &list);
+  /**
+   **apply funcs
+   **/
+  void		apply_wall() const;
+  void		apply_bg() const;
+  void		apply_snake(std::list<Pos>&) const;
+  /**
+   **joy funcs
+   **/
+  Key		game_pause() const;
+  Key		update_joystick() const;
   void		init_joystick();
-  void		init_lights();
-
-  void		end_sdl();
-  void		load();
-  void		draw_block(int x, int y, int state);
-  Key		refresh_screen(std::list<Pos> &, int, int);
-  void		*keySpecial(int key, int x, int y);
-  Key		keyNormal(unsigned char key, int x, int y);
-  GLuint       	loadTexture(const char *filename, bool useMipMap);
-  SDL_Surface	*flipSurface(SDL_Surface * surface);
-  void		loadColor(int i, int state);
-  Key		update_joystick();
-
-  void		apply_score();
-  void		apply_wall();
-  void		apply_bg();
-  void		apply_snake(std::list<Pos>&);
-  void		apply_lights();
-
-  Key		game_pause();
-  void		fancy_starter(std::list<Pos> &list);
-
   ~Snake() {};
 
 private:
-  GLuint	_walltexture;
+  GLuint	*_texture;
   SDL_Event	_event;
   SDL_Surface	*_screen;
-  SDL_Surface	*_text;
-  TTF_Font	*_font;
-  SDL_Color	_color;
-  SDL_Color	_colorpause;
-  TTF_Font	*_fontscore;
-  TTF_Font	*_fontmenu;
+  Key		_key;
   int		_width;
   int		_height;
-  Key		_key;
   int		_delay;
-  int		_help;
   int		_score;
   int		_fd;
   int		_joy;

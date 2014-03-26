@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Mon Mar 24 16:02:08 2014 ribeaud antonin
+// Last update Tue Mar 25 22:31:36 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -26,7 +26,7 @@ void		Snake::init_font()
   _colorpause.b = 255;
 }
 
-void		Snake::init(int w, int h)
+void		Snake::init(const int &w, const int &h)
 {
   _width = w;
   _height = h;
@@ -46,7 +46,12 @@ void		Snake::init(int w, int h)
   my_flip();
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
+void		Snake::end_sdl()
+{
+  SDL_Quit();
+}
+
+Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
 {
   _score = score;
   draw_img(list);
@@ -133,12 +138,7 @@ void		Snake::apply_wall()
 // ----------SDL ABSTRACT-----------
 // ---------------------------------
 
-void		Snake::end_sdl()
-{
-  SDL_Quit();
-}
-
-SDL_Surface     *Snake::load_image(std::string &filename)
+SDL_Surface     *Snake::load_image(const std::string &filename)
 {
   SDL_Surface   *loadedImage;
 
@@ -147,7 +147,7 @@ SDL_Surface     *Snake::load_image(std::string &filename)
   return (loadedImage);
 }
 
-void		Snake::apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest)
+void		Snake::apply_surface(const int &x, const int &y, const SDL_Surface *src, const SDL_Surface *dest)
 {
   SDL_Rect	offset;
 
@@ -157,7 +157,7 @@ void		Snake::apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest)
     error(1, 0, "Couldn't Blit surface");
 }
 
-void		Snake::my_flip()
+void		Snake::my_flip() const
 {
   if (SDL_Flip(_screen) == -1)
     error(1, 0, "Couldn't refresh screen");

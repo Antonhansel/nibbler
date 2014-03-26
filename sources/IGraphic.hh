@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 21 19:42:53 2014 ribeaud antonin
+// Last update Tue Mar 25 17:37:55 2014 ribeaud antonin
 //
 
 #ifndef _IGRAPHIC_H
@@ -56,8 +56,8 @@ typedef struct {
 class IGraphic {
 public:
   virtual ~IGraphic() = 0;
-  virtual void init(int w, int h) = 0;
-  virtual Key refresh_screen(std::list<Pos> &, int, int) = 0;
+  virtual void init(const int &, const int &) = 0;
+  virtual Key refresh_screen(std::list<Pos> &, const int&, const int&) = 0;
 };
 
 #endif

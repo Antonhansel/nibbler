@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Sun Mar 23 13:58:13 2014 ribeaud antonin
+// Last update Tue Mar 25 22:31:46 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -32,21 +32,33 @@
 class Snake : public IGraphic
 {
 public:
-  SDL_Surface	*load_image(std::string &filename);
-  void		apply_surface(int x, int y, SDL_Surface *src, SDL_Surface *dest);
-  void		my_flip();
+  /*
+  **SDL funcs
+  */
+  SDL_Surface	*load_image(const std::string &filename);
+  void		apply_surface(const int &x, const int &y, const SDL_Surface *src, const SDL_Surface *dest);
+  /*
+  **loop funcs
+  */
+  void		my_flip() const;
+  Key		refresh_screen(std::list<Pos> &, const int&, const int&);
   void		apply_wall();
   void		apply_bg();
+  void		apply_score();
   void		apply_snake(std::list<Pos>&);
   void		draw_img(std::list<Pos>&);
-  void		init(int w, int h);
+  /*
+  **init funcs
+  */
+  void		init(const int &w, const int &h);
   void		end_sdl();
   void		load();
   void		init_font();
+  /*
+  **joystick funcs
+  */
   void		init_joystick();
   Key		update_joystick();
-  void		apply_score();
-  Key		refresh_screen(std::list<Pos> &, int, int);
   Key		game_pause();
   ~Snake() {};
 

@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Fri Mar 21 12:29:43 2014 ribeaud antonin
+// Last update Tue Mar 25 17:37:23 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -18,7 +18,7 @@ extern "C"
   }
 }
 
-void		Snake::init(int w, int h)
+void		Snake::init(const int &w, const int &h)
 {
   _width = w;
   _height = h;
@@ -56,7 +56,7 @@ void		Snake::testsize()
     }
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, int delay, int score)
+Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
 {
   int	key;
   

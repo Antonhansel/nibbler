@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Fri Mar 21 11:33:06 2014 ribeaud antonin
+// Last update Tue Mar 25 17:37:40 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -30,7 +30,7 @@ public:
   void		my_flip();
   void		apply_snake(std::list<Pos>&);
   void		draw_img(std::list<Pos>&);
-  void		init(int w, int h);
+  void		init(const int &w, const int &h);
   void		testsize();
 
   void		end();
@@ -39,7 +39,7 @@ public:
   void		init_joystick();
   Key		update_joystick();
   
-  Key		refresh_screen(std::list<Pos> &, int, int);
+  Key		refresh_screen(std::list<Pos> &, const int&, const int&);
   void	        apply_surface(int x, int y, State state);
   ~Snake() {};
 
