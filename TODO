@@ -1,4 +1,3 @@
- -Changement du placement du text dans la SDL
  -Touches dans la ncurses
  -Faire en sorte que les pommes ne peuvent pas poper SUR le snake (possible actuellement)
  -Implémenter la texture de l'angle dans les 3 libs (simple changement de couleurs en openGL/ncurses)

@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Mar 14 12:15:23 2014 ribeaud antonin
+// Last update Wed Mar 26 12:43:13 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -24,8 +24,11 @@ int		main(int argc, char const *argv[])
   width = std::atoi(argv[1]);
   height = std::atoi(argv[2]);
   graphiclib = argv[3];
-  if (width < 3 || height < 3)
-    error(1, 0, "Map size too small");
+  if (width == height)
+    {
+      if (width < 3 || height > 30)
+	error(1, 0, "Map size too small");
+    }
   nibbler = new Nibbler(width, height);
   nibbler->initGraphic(graphiclib);
   nibbler->startGame();

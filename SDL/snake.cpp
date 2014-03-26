@@ -5,13 +5,9 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 10:36:44 2014 ribeaud antonin
+// Last update Wed Mar 26 13:01:46 2014 ribeaud antonin
 //
 
-#include <error.h>
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
 #include "snake.hpp"
 
 void		Snake::init_font()
@@ -48,6 +44,15 @@ void		Snake::init(const int &w, const int &h)
 
 void		Snake::end_sdl()
 {
+  SDL_FreeSurface(_screen);
+  SDL_FreeSurface(_bg);
+  SDL_FreeSurface(_wall);
+  SDL_FreeSurface(_text);
+  TTF_CloseFont(_fontscore);
+  TTF_CloseFont(_fontmenu);
+  for (int i = 0; i < 16; i++)
+    SDL_FreeSurface(_snake[(State)(i)]);
+  TTF_Quit();
   SDL_Quit();
 }
 
@@ -96,11 +101,11 @@ void		Snake::draw_img(std::list<Pos> &list)
   my_flip();
 }
 
-void		Snake::apply_score()
+void			Snake::apply_score()
 {
-  std::stringstream newscore;
-  std::string	    temp;
-  char const * temp2;
+  std::stringstream	newscore;
+  std::string		temp;
+  char const		*temp2;
   
   newscore << "Score: " <<  _score;
   temp = newscore.str();
@@ -138,7 +143,7 @@ void		Snake::apply_wall()
 // ----------SDL ABSTRACT-----------
 // ---------------------------------
 
-SDL_Surface     *Snake::load_image(const std::string &filename)
+SDL_Surface     *Snake::load_image(const std::string &filename) const
 {
   SDL_Surface   *loadedImage;
 
@@ -147,7 +152,7 @@ SDL_Surface     *Snake::load_image(const std::string &filename)
   return (loadedImage);
 }
 
-void		Snake::apply_surface(const int &x, const int &y, SDL_Surface *src, SDL_Surface *dest)
+void		Snake::apply_surface(const int &x, const int &y, SDL_Surface *src, SDL_Surface *dest) const
 {
   SDL_Rect	offset;
 
@@ -201,7 +206,7 @@ void		Snake::init_joystick()
 Key		Snake::game_pause()
 {
   struct js_event	e;
-  int		pos;
+  int			pos;
   
   pos = -1;
   while (42)
