@@ -5,14 +5,13 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 18:52:19 2014 ribeaud antonin
+// Last update Wed Mar 26 19:04:26 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
 
 void		Snake::init(const int &w, const int &h)
 {
-
   _width = w;
   _height = h;
   initscr();
@@ -120,7 +119,7 @@ void		Snake::apply_snake(std::list<Pos> &list)
     apply_surface((*i).x, (*i).y, (*i).state);
 }
 
-void	        Snake::apply_surface(int x, int y, State state)
+void	        Snake::apply_surface(int x, int y, const State &state) const
 {
   static int blink = -1;
 
@@ -136,14 +135,14 @@ void	        Snake::apply_surface(int x, int y, State state)
 	  wattroff(window, A_REVERSE | A_BLINK);
 	}
       else
-	  waddch(window, '0');
+	waddch(window, '0');
       blink *= -1;
     }
   else
     waddch(window, ACS_CKBOARD);
 }
 
-void		Snake::my_flip()
+void		Snake::my_flip() const
 {
   wrefresh(window);
   wrefresh(score);
