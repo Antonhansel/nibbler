@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Tue Mar 25 22:31:46 2014 ribeaud antonin
+// Last update Wed Mar 26 10:36:55 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -36,7 +36,7 @@ public:
   **SDL funcs
   */
   SDL_Surface	*load_image(const std::string &filename);
-  void		apply_surface(const int &x, const int &y, const SDL_Surface *src, const SDL_Surface *dest);
+  void		apply_surface(const int &x, const int &y, SDL_Surface *src, SDL_Surface *dest);
   /*
   **loop funcs
   */

@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Tue Mar 25 22:31:36 2014 ribeaud antonin
+// Last update Wed Mar 26 10:36:44 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -147,7 +147,7 @@ SDL_Surface     *Snake::load_image(const std::string &filename)
   return (loadedImage);
 }
 
-void		Snake::apply_surface(const int &x, const int &y, const SDL_Surface *src, const SDL_Surface *dest)
+void		Snake::apply_surface(const int &x, const int &y, SDL_Surface *src, SDL_Surface *dest)
 {
   SDL_Rect	offset;
 
