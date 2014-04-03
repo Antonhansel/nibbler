@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Apr  3 14:14:28 2014 ribeaud antonin
+// Last update Thu Apr  3 14:30:54 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -20,6 +20,27 @@ void		Snake::init_font()
   _colorpause.r = 255;
   _colorpause.g = 255;
   _colorpause.b = 255;
+}
+
+
+void            Snake::check_konami(int code)
+{
+  static        int i = 0;
+
+  if (i <= 1 && code == SDLK_UP)
+    i++;
+  else if ((i == 2 || i == 3) && code == SDLK_DOWN)
+    i++;
+  else if ((i == 4 || i == 6) && code == SDLK_LEFT)
+    i++;
+  else if ((i == 5  || i == 7) && code == SDLK_RIGHT)
+    i++;
+  else if (i == 8 && code == SDLK_b)
+    i++;
+  else if (i == 9 && code == SDLK_a)
+    _joy *= -1;
+  else
+    i = 0;
 }
 
 void		Snake::init(const int &w, const int &h)
@@ -73,6 +94,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 	    return (ESCAPE);
 	  if (_event.type == SDL_KEYDOWN)
 	    {
+	      check_konami(_event.key.keysym.sym);
 	      if (_event.key.keysym.sym == SDLK_LEFT)
 		return (LEFT);
 	      if (_event.key.keysym.sym == SDLK_RIGHT)
@@ -82,8 +104,6 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 		  end_sdl();
 		  return (ESCAPE);
 		}
-	      if (_event.key.keysym.sym == SDLK_DOWN)
-		_joy *= -1;
 	    }
 	}
     }
@@ -200,7 +220,7 @@ void		Snake::init_joystick()
 {
   _fd = open("/dev/input/js1", O_NONBLOCK);
   if (_fd > 0)
-      std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+      std::cout << "Joystick detected. Use KONAMI code to activate!\n" << std::endl;
   else
     std::cout << "Unable to detect joystick\n" << std::endl;
 }

@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Apr  3 14:19:46 2014 ribeaud antonin
+// Last update Thu Apr  3 14:44:59 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -57,6 +57,26 @@ void		Snake::testsize()
     }
 }
 
+void            Snake::check_konami(int code)
+{
+  static        int i = 0;
+
+  if (i <= 1 && code == 0403)
+    i++;
+  else if ((i == 2 || i == 3) && code == 0402)
+    i++;
+  else if ((i == 4 || i == 6) && code == 0404)
+    i++;
+  else if ((i == 5  || i == 7) && code == 0405)
+    i++;
+  else if (i == 8 && code == 'b')
+    i++;
+  else if (i == 9 && code == 'a')
+    _joy *= -1;
+  else
+    i = 0;
+}
+
 Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
 {
   int	key;
@@ -75,6 +95,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 	{
 	  wtimeout(window, 0);
 	  key = getch();
+	  check_konami(key);
 	  if (key == 0404)
 	    return (LEFT);
 	  if (key == 0405)
@@ -122,7 +143,7 @@ void	        Snake::apply_surface(int x, int y, const State &state) const
 {
   static int blink = -1;
 
-  wmove(window, y++, x++);
+  wmove(window, y, x);
   if (state == 14)
     waddch(window, 'O');
   else if (state == 15)
@@ -159,7 +180,7 @@ void		Snake::init_joystick()
 {
   _fd = open("/dev/input/js1", O_NONBLOCK);
   if (_fd > 0)
-    std::cout << "Joystick detected. Press 'down' to activate\n" << std::endl;
+    std::cout << "Joystick detected. Use KONAMI code to activate\n" << std::endl;
   else
     std::cout << "Unable to detect joystick\n" << std::endl;
 }

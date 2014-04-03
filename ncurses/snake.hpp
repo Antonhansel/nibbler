@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Wed Mar 26 19:04:33 2014 ribeaud antonin
+// Last update Thu Apr  3 14:36:03 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -43,6 +43,7 @@ public:
   
   Key		refresh_screen(std::list<Pos> &, const int&, const int&);
   void	        apply_surface(int x, int y, const State &state) const;
+  void          check_konami(int code);
   ~Snake() {};
   int		_score;
   int		_width;
