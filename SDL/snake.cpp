@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 18:08:17 2014 ribeaud antonin
+// Last update Thu Apr  3 14:14:28 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -61,6 +61,8 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
   _score = score;
   draw_img(list);
   SDL_Delay(delay);
+  if (delay == 1)
+    end_sdl();
   if (_fd > 0 && _joy == 1)
     return (update_joystick());
   else

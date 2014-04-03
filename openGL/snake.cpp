@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 16:25:08 2014 ribeaud antonin
+// Last update Thu Apr  3 13:09:04 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -33,7 +33,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 {
   _score = score;
   _delay = delay;
-  if (delay == 0)
+  if (delay == 1)
     end_opengl(list);
   else
     {

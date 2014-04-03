@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Wed Mar 26 19:04:26 2014 ribeaud antonin
+// Last update Thu Apr  3 14:19:46 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -24,7 +24,7 @@ void		Snake::init(const int &w, const int &h)
   window = newwin(_height, _width + 1, 3, 0);
   keypad(stdscr, TRUE);
   keypad(window, TRUE);
-  _joy = 1;
+  _joy = -1;
   curs_set(0);
   init_joystick();
   testsize();
@@ -64,7 +64,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
   _score = score;
   usleep(delay * 1000);
   key = 0;
-  if (delay == 0)
+  if (delay == 1)
     end();
   else
     {
@@ -102,7 +102,6 @@ void		Snake::draw_img(std::list<Pos> &list)
   newscore << "Score: " <<  _score;
   temp = newscore.str();
   temp2 = (char*)temp.c_str();
-
   testsize();
   wclear(window);
   wclear(score);
@@ -187,9 +186,9 @@ Key		Snake::update_joystick() const
 	  if (e.number == 0)
 	    {
 	      if (e.value > 32700)
-		return (LEFT);
-	      else if (e.value < -32700)
 		return (RIGHT);
+	      else if (e.value < -32700)
+		return (LEFT);
 	    }
 	}
     }
