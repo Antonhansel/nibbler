@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Sat Apr  5 14:39:55 2014 ribeaud antonin
+// Last update Sat Apr  5 20:06:34 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -24,15 +24,10 @@ int		main(int argc, char const *argv[])
   width = std::atoi(argv[1]);
   height = std::atoi(argv[2]);
   graphiclib = argv[3];
-  if (width == height)
-    {
-      if (width < 3 || height > 30)
-	error(1, 0, "Wrong map size");
-      nibbler = new Nibbler(width, height);
-      nibbler->initGraphic(graphiclib);
-      nibbler->startGame();
-    }
-  else
-    error(1, 0, "Map must be squared");
+  if (width < 4 || height > 30 || width != height)
+    error(1, 0, "Wrong map size");
+  nibbler = new Nibbler(width, height);
+  nibbler->initGraphic(graphiclib);
+  nibbler->startGame();
   return 0;
 }

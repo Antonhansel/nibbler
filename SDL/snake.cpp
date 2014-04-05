@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 15:42:59 2014 ribeaud antonin
+// Last update Sat Apr  5 20:01:13 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -24,7 +24,7 @@ void		Snake::init_font()
   _colorpause.b = 255;
 }
 
-void            Snake::check_konami(int code)
+void            Snake::check_konami(const int code)
 {
   static        int i = 0;
 
@@ -134,7 +134,7 @@ void			Snake::apply_score()
   temp = newscore.str();
   temp2 = (char*)temp.c_str();
   _text = TTF_RenderText_Solid(_fontscore, temp2, _color);
-  apply_surface((WIDTH/2 - 64), 0, _text, _screen);
+  apply_surface((((_width/2) * 32) - 64), 0, _text, _screen);
 }
 
 void		Snake::apply_snake(std::list<Pos> &list)
@@ -189,32 +189,6 @@ void		Snake::my_flip() const
 {
   if (SDL_Flip(_screen) == -1)
     error(1, 0, "Couldn't refresh screen");
-}
-
-void		Snake::load()
-{
-  _bg = load_image(Snake::bg_path);
-  _wall = load_image(Snake::wall_path);
-  _snake[FOOD] = load_image(Snake::apple);
-  _snake[BONUS] = load_image(Snake::star);
-
-  _snake[HEAD_NORTH] = load_image(Snake::head_up);
-  _snake[HEAD_SOUTH] = load_image(Snake::head_down);
-  _snake[HEAD_WEST] = load_image(Snake::head_right);
-  _snake[HEAD_EAST] = load_image(Snake::head_left);
-
-  _snake[TAIL_NORTH] = load_image(Snake::tail_up);
-  _snake[TAIL_SOUTH] = load_image(Snake::tail_down);
-  _snake[TAIL_WEST] = load_image(Snake::tail_right);
-  _snake[TAIL_EAST] = load_image(Snake::tail_left);
-
-  _snake[BODY_HORIZONTAL] = load_image(Snake::body_hor);
-  _snake[BODY_VERTICAL] = load_image(Snake::body_vert);
-
-  _snake[BODY_ANGLE_SOUTH_EAST] = load_image(Snake::turn_downleft);
-  _snake[BODY_ANGLE_SOUTH_WEST] = load_image(Snake::turn_downright);
-  _snake[BODY_ANGLE_NORTH_EAST] = load_image(Snake::turn_upleft);
-  _snake[BODY_ANGLE_NORTH_WEST] = load_image(Snake::turn_upright);
 }
 
 void		Snake::init_joystick()
@@ -303,6 +277,32 @@ Key		Snake::update_joystick()
 	}
     }
   return (OTHER);
+}
+
+void		Snake::load()
+{
+  _bg = load_image(Snake::bg_path);
+  _wall = load_image(Snake::wall_path);
+  _snake[FOOD] = load_image(Snake::apple);
+  _snake[BONUS] = load_image(Snake::star);
+
+  _snake[HEAD_NORTH] = load_image(Snake::head_up);
+  _snake[HEAD_SOUTH] = load_image(Snake::head_down);
+  _snake[HEAD_WEST] = load_image(Snake::head_right);
+  _snake[HEAD_EAST] = load_image(Snake::head_left);
+
+  _snake[TAIL_NORTH] = load_image(Snake::tail_up);
+  _snake[TAIL_SOUTH] = load_image(Snake::tail_down);
+  _snake[TAIL_WEST] = load_image(Snake::tail_right);
+  _snake[TAIL_EAST] = load_image(Snake::tail_left);
+
+  _snake[BODY_HORIZONTAL] = load_image(Snake::body_hor);
+  _snake[BODY_VERTICAL] = load_image(Snake::body_vert);
+
+  _snake[BODY_ANGLE_SOUTH_EAST] = load_image(Snake::turn_downleft);
+  _snake[BODY_ANGLE_SOUTH_WEST] = load_image(Snake::turn_downright);
+  _snake[BODY_ANGLE_NORTH_EAST] = load_image(Snake::turn_upleft);
+  _snake[BODY_ANGLE_NORTH_WEST] = load_image(Snake::turn_upright);
 }
 
 extern "C"

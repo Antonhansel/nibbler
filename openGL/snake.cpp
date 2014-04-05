@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 15:48:47 2014 ribeaud antonin
+// Last update Sat Apr  5 20:00:21 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -68,7 +68,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
   return (OTHER);
 }
 
-void            Snake::check_konami(int code)
+void            Snake::check_konami(const int code)
 {
   static        int i = 0;
 
@@ -94,6 +94,11 @@ void            Snake::check_konami(int code)
 
 void		Snake::init(const int &w, const int &h)
 {
+  if (w != h)
+    {
+      std::cout << "Map must be squared" << std::endl;
+      exit(1);
+    }
   _width = w;
   _height = h;
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||

@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Thu Apr  3 14:11:39 2014 ribeaud antonin
+// Last update Sat Apr  5 20:06:04 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -26,10 +26,10 @@ Nibbler::Nibbler(int w, int h)
   tmph = h/2;
   this->graphic = NULL;
   this->pos.push_back((Pos){3, 3, FOOD});
-  this->pos.push_back((Pos){tmpw-2, tmph, TAIL_WEST});
-  this->pos.push_back((Pos){tmpw-1, tmph, BODY_HORIZONTAL});
+  this->pos.push_back((Pos){tmpw - 2, tmph, TAIL_WEST});
+  this->pos.push_back((Pos){tmpw - 1, tmph, BODY_HORIZONTAL});
   this->pos.push_back((Pos){tmpw, tmph, BODY_HORIZONTAL});
-  this->pos.push_back((Pos){tmpw+1, tmph, HEAD_WEST});
+  this->pos.push_back((Pos){tmpw + 1, tmph, HEAD_WEST});
   _boost = 0;
   _slow = 0;
 }
@@ -106,7 +106,7 @@ void        Nibbler::startGame()
       this->loopGame(key);
       if (this->looseGame())
         {
-	  std::cout << "You died!1! Score:" << _score << std::endl;
+	  std::cout << "You died!! Score:" << _score << std::endl;
 	  this->graphic->refresh_screen(this->pos, 1, _score);
 	  break;
         }

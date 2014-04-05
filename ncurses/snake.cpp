@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 14:24:30 2014 ribeaud antonin
+// Last update Sat Apr  5 20:02:13 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -57,7 +57,7 @@ void		Snake::testsize()
     }
 }
 
-void            Snake::check_konami(int code)
+void            Snake::check_konami(const int code)
 {
   static        int i = 0;
 
