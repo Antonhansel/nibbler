@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Wed Mar 26 12:43:13 2014 ribeaud antonin
+// Last update Sat Apr  5 14:39:55 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -27,10 +27,12 @@ int		main(int argc, char const *argv[])
   if (width == height)
     {
       if (width < 3 || height > 30)
-	error(1, 0, "Map size too small");
+	error(1, 0, "Wrong map size");
+      nibbler = new Nibbler(width, height);
+      nibbler->initGraphic(graphiclib);
+      nibbler->startGame();
     }
-  nibbler = new Nibbler(width, height);
-  nibbler->initGraphic(graphiclib);
-  nibbler->startGame();
+  else
+    error(1, 0, "Map must be squared");
   return 0;
 }
