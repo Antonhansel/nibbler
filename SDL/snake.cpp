@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Apr  3 14:30:54 2014 ribeaud antonin
+// Last update Sat Apr  5 14:10:50 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -21,7 +21,6 @@ void		Snake::init_font()
   _colorpause.g = 255;
   _colorpause.b = 255;
 }
-
 
 void            Snake::check_konami(int code)
 {

@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Apr  3 14:35:54 2014 ribeaud antonin
+// Last update Sat Apr  5 14:24:31 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -122,6 +122,8 @@ void		Snake::init_lights() const
 void		Snake::end_opengl(std::list<Pos> &list)
 {
   camera_movements(0, list);
+  SDL_Quit();
+  delete _texture;
 }
 
 void		Snake::set_values()
@@ -273,6 +275,7 @@ void		Snake::draw_block(const int &x, const int &y, const int &state) const
   glTexCoord2d(1.0,0.0);	glVertex3d(x,     y,      1);
   glTexCoord2d(1.0,1.0);	glVertex3d(x + 1, y,      1);
   glTexCoord2d(0.0,1.0);	glVertex3d(x + 1, y + 1,  1);
+
   glEnd();
 }
 

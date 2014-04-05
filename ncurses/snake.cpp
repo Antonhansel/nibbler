@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Thu Apr  3 14:44:59 2014 ribeaud antonin
+// Last update Sat Apr  5 14:24:30 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -110,9 +110,9 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
   return (OTHER);
 }
 
-// ---------------------------------
-// ------------GAME BASE------------
-// ---------------------------------
+/*#######################################*/
+/*############ APPLY FUNCS ##############*/
+/*#######################################*/
 
 void		Snake::draw_img(std::list<Pos> &list)
 {
@@ -175,6 +175,10 @@ void		Snake::end() const
   nocbreak();
   endwin();
 }
+
+/*#######################################*/
+/*############## JOYSTICK ###############*/
+/*#######################################*/
 
 void		Snake::init_joystick()
 {
