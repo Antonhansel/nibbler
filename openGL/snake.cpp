@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 14:24:31 2014 ribeaud antonin
+// Last update Sat Apr  5 15:48:47 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -122,6 +122,7 @@ void		Snake::init_lights() const
 void		Snake::end_opengl(std::list<Pos> &list)
 {
   camera_movements(0, list);
+  SDL_FreeSurface(_screen);
   SDL_Quit();
   delete _texture;
 }

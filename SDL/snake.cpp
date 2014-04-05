@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 14:10:50 2014 ribeaud antonin
+// Last update Sat Apr  5 15:42:59 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -14,6 +14,8 @@ void		Snake::init_font()
 {
   _fontscore = TTF_OpenFont("img/snake.ttf", 60);
   _fontmenu = TTF_OpenFont("img/menu.ttf", 60);
+  if (!_fontscore || !_fontmenu)
+    error(1, 0, "Unable to open fonts");
   _color.r = 255;
   _color.g = 0;
   _color.b = 0;
@@ -46,10 +48,10 @@ void		Snake::init(const int &w, const int &h)
 {
   _width = w;
   _height = h;
-  SDL_WM_SetCaption(NAME, NULL);
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
       !(_screen = SDL_SetVideoMode(SP_SIZE * (_width + 2), SP_SIZE * (_height + 2), BPP, SDL_HWSURFACE)))
     error(1, 0, "Couldn't initialize Graphic Mode");
+  SDL_WM_SetCaption(NAME, NULL);
   if (TTF_Init() == -1)
     error(1, 0, "Couldn't initialize fonts");
   _fd = 0;
@@ -179,7 +181,7 @@ void		Snake::apply_surface(const int &x, const int &y, SDL_Surface *src, SDL_Sur
 
   offset.x = x;
   offset.y = y;
-  if (SDL_BlitSurface(src, NULL, dest, &offset) == -1)
+  if (!src || !dest || SDL_BlitSurface(src, NULL, dest, &offset) == -1)
     error(1, 0, "Couldn't Blit surface");
 }
 
