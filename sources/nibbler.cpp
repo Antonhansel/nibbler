@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Sun Apr  6 14:57:25 2014 ribeaud antonin
+// Last update Sun Apr  6 18:13:28 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -36,15 +36,23 @@ Nibbler::Nibbler(int w, int h)
 
 Nibbler::~Nibbler()
 {
-    delete this->graphic;
+  if (this->graphic != NULL)
+    {
+      if (dlclose(this->graphic) != 0)
+	error(1, 0, "dlclose failed! -> %s", dlerror());
+    }
+  delete this->graphic;
 }
 
 void        Nibbler::initGraphic(std::string &libname)
 {
   void        *handle;
   IGraphic    *(*creation)();
-
-  if (!(handle = dlopen(libname.c_str(), RTLD_LAZY)))
+  const char	*newpath;
+  
+  if ((newpath = realpath(libname.c_str(), NULL)) == NULL)
+    newpath = libname.c_str();
+  if (!(handle = dlopen(newpath, RTLD_LAZY)))
     error(1, 0, "dlopen failed: Unable to open library file! -> %s", dlerror());
   if (!(creation = reinterpret_cast<IGraphic *(*)()>(dlsym(handle, "init_lib"))))
     error(1, 0, "dlsym failed! -> %s", dlerror());
