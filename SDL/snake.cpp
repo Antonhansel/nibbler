@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 20:01:13 2014 ribeaud antonin
+// Last update Sun Apr  6 13:42:07 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -78,7 +78,7 @@ void		Snake::end_sdl()
   SDL_Quit();
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
+Key		Snake::refresh_screen(const std::list<Pos> &list, const int &delay, const int &score)
 {
   _score = score;
   draw_img(list);
@@ -115,7 +115,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 // ------------GAME BASE------------
 // ---------------------------------
 
-void		Snake::draw_img(std::list<Pos> &list)
+void		Snake::draw_img(const std::list<Pos> &list)
 {
   apply_bg();
   apply_wall();
@@ -137,9 +137,9 @@ void			Snake::apply_score()
   apply_surface((((_width/2) * 32) - 64), 0, _text, _screen);
 }
 
-void		Snake::apply_snake(std::list<Pos> &list)
+void		Snake::apply_snake(const std::list<Pos> &list)
 {
-  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+  for (std::list<Pos>::const_iterator i = list.begin(); i != list.end(); ++i)
     apply_surface((*i).x * SP_SIZE + SP_SIZE, (*i).y * SP_SIZE + SP_SIZE, _snake[(*i).state], _screen);
 }
 

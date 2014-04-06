@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 20:02:13 2014 ribeaud antonin
+// Last update Sun Apr  6 13:56:07 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -20,8 +20,8 @@ void		Snake::init(const int &w, const int &h)
   cbreak();
   nodelay(stdscr, TRUE);
   nodelay(window, TRUE);
-  score = newwin(3, _width + 1, 0, 0);
-  window = newwin(_height, _width + 1, 3, 0);
+  score = newwin(3, _width + 2, 0, 0);
+  window = newwin(_height + 1, _width + 2, 3, 0);
   keypad(stdscr, TRUE);
   keypad(window, TRUE);
   _joy = -1;
@@ -52,8 +52,8 @@ void		Snake::testsize()
 	  if (ioctl(1, TIOCGWINSZ, &_w) == -1)
 	    error(1, 0, "ioctl failed");
 	}
-      score = newwin(3, _width + 1, 0, 0);
-      window = newwin(_height, _width + 1, 3, 0);
+      score = newwin(3, _width + 2, 0, 0);
+      window = newwin(_height + 1, _width + 2, 3, 0);
     }
 }
 
@@ -77,7 +77,7 @@ void            Snake::check_konami(const int code)
     i = 0;
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
+Key		Snake::refresh_screen(const std::list<Pos> &list, const int &delay, const int &score)
 {
   int	key;
 
@@ -114,7 +114,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
 /*############ APPLY FUNCS ##############*/
 /*#######################################*/
 
-void		Snake::draw_img(std::list<Pos> &list)
+void		Snake::draw_img(const std::list<Pos> &list)
 {
   std::stringstream	newscore;
   std::string		temp;
@@ -133,17 +133,17 @@ void		Snake::draw_img(std::list<Pos> &list)
   my_flip();
 }
 
-void		Snake::apply_snake(std::list<Pos> &list)
+void		Snake::apply_snake(const std::list<Pos> &list)
 {
-  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+  for (std::list<Pos>::const_iterator i = list.begin(); i != list.end(); ++i)
     apply_surface((*i).x, (*i).y, (*i).state);
 }
 
 void	        Snake::apply_surface(int x, int y, const State &state) const
 {
-  static int blink = -1;
+  static	int blink = -1;
 
-  wmove(window, y, x);
+  wmove(window, y, x+1);
   if (state == 14)
     waddch(window, 'O');
   else if (state == 15)
@@ -189,6 +189,19 @@ void		Snake::init_joystick()
     std::cout << "Unable to detect joystick\n" << std::endl;
 }
 
+Key			Snake::game_pause() const
+{
+  struct js_event	e;
+
+  while (42)
+    {
+      usleep(100);
+      if (read(_fd, &e, sizeof(struct js_event)) > 0 && 
+	  (e.type &= JS_EVENT_BUTTON) && e.value == 1 && e.number == 8)
+	return (OTHER);
+    }
+}
+
 Key		Snake::update_joystick() const
 {
   struct js_event	e;
@@ -200,10 +213,7 @@ Key		Snake::update_joystick() const
 	  if (e.value == 1)
 	    {
 	      if (e.number == 8)
-		{
-		  end();
-		  return (ESCAPE);
-		}
+		return (game_pause());
 	    }	
 	}
       else

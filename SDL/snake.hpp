@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Sat Apr  5 20:01:25 2014 ribeaud antonin
+// Last update Sun Apr  6 13:42:16 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -44,12 +44,12 @@ public:
   **loop funcs
   */
   void		my_flip() const;
-  Key		refresh_screen(std::list<Pos> &, const int&, const int&);
+  Key		refresh_screen(const std::list<Pos> &, const int&, const int&);
   void		apply_wall();
   void		apply_bg();
   void		apply_score();
-  void		apply_snake(std::list<Pos>&);
-  void		draw_img(std::list<Pos>&);
+  void		apply_snake(const std::list<Pos>&);
+  void		draw_img(const std::list<Pos>&);
   /*
   **init funcs
   */

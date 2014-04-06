@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sat Apr  5 20:00:21 2014 ribeaud antonin
+// Last update Sun Apr  6 13:49:26 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -15,7 +15,7 @@
 /*############# CORE FUNC ###############*/
 /*#######################################*/
 
-void		Snake::draw_img(std::list<Pos> &list) const
+void		Snake::draw_img(const std::list<Pos> &list) const
 {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -29,7 +29,7 @@ void		Snake::draw_img(std::list<Pos> &list) const
   my_flip();
 }
 
-Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &score)
+Key		Snake::refresh_screen(const std::list<Pos> &list, const int &delay, const int &score)
 {
   _score = score;
   _delay = delay;
@@ -68,7 +68,7 @@ Key		Snake::refresh_screen(std::list<Pos> &list, const int &delay, const int &sc
   return (OTHER);
 }
 
-void            Snake::check_konami(const int code)
+void            Snake::check_konami(int code)
 {
   static        int i = 0;
 
@@ -94,11 +94,6 @@ void            Snake::check_konami(const int code)
 
 void		Snake::init(const int &w, const int &h)
 {
-  if (w != h)
-    {
-      std::cout << "Map must be squared" << std::endl;
-      exit(1);
-    }
   _width = w;
   _height = h;
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1 ||
@@ -124,7 +119,7 @@ void		Snake::init_lights() const
   glEnable(GL_COLOR_MATERIAL);
 }
 
-void		Snake::end_opengl(std::list<Pos> &list)
+void		Snake::end_opengl(const std::list<Pos> &list)
 {
   camera_movements(0, list);
   SDL_FreeSurface(_screen);
@@ -148,7 +143,7 @@ void		Snake::set_values()
   _texture[17] = load_texture("img/bg.bmp");
 }
 
-void		Snake::camera_movements(const int &state, std::list<Pos> &list)
+void		Snake::camera_movements(const int &state, const std::list<Pos> &list)
 {
   int		x;
   int		rotate;
@@ -228,9 +223,9 @@ void		Snake::apply_bg() const
   glEnd();
 }
 
-void		Snake::apply_snake(std::list<Pos> &list) const
+void		Snake::apply_snake(const std::list<Pos> &list) const
 {
-  for (std::list<Pos>::iterator i = list.begin(); i != list.end(); ++i)
+  for (std::list<Pos>::const_iterator i = list.begin(); i != list.end(); ++i)
     draw_block((*i).x, (*i).y, (*i).state);
 }
 

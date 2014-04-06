@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:08:13 2014 ribeaud antonin
-// Last update Sat Apr  5 20:00:31 2014 ribeaud antonin
+// Last update Sun Apr  6 13:41:56 2014 ribeaud antonin
 
 #ifndef _SNAKE_HPP_
 # define _SNAKE_HPP_
@@ -38,9 +38,9 @@ public:
    **loop funcs
    **/
   void		draw_block(const int &x, const int &y, const int &state) const;
-  Key		refresh_screen(std::list<Pos> &, const int&, const int&);
+  Key		refresh_screen(const std::list<Pos> &, const int&, const int&);
   void		my_flip() const;
-  void		draw_img(std::list<Pos>&) const;
+  void		draw_img(const std::list<Pos>&) const;
   /**
    **init funcs
    **/
@@ -48,21 +48,21 @@ public:
   void		init_lights() const;
   void		set_values();
   GLuint	load_texture(char const *filename) const;
-  void		camera_movements(const int &state, std::list <Pos> &list);
-  void		end_opengl(std::list <Pos> &list);
+  void		camera_movements(const int &state, const std::list <Pos> &list);
+  void		end_opengl(const std::list <Pos> &list);
   /**
    **apply funcs
    **/
   void		apply_wall() const;
   void		apply_bg() const;
-  void		apply_snake(std::list<Pos>&) const;
+  void		apply_snake(const std::list<Pos>&) const;
   /**
    **joy funcs
    **/
   Key		game_pause() const;
   Key		update_joystick() const;
   void		init_joystick();
-  void          check_konami(const int);
+  void          check_konami(int);
   ~Snake() {};
 
 private:

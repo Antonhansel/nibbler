@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Fri Mar 14 13:13:43 2014 ribeaud antonin
-## Last update Sat Apr  5 14:25:03 2014 ribeaud antonin
+## Last update Sun Apr  6 13:37:34 2014 ribeaud antonin
 ##
 
 NAME_EXE        = nibbler
@@ -26,11 +26,11 @@ OBJ_NC         = $(SRC_NC:.cpp=.o)
 
 NAME_GL        	= lib_nibbler_opengl.so
 SRC_GL		= openGL/snake.cpp
-GL_FLAG        	= -lSDL -lSDL_image -lSDL_ttf -lGLU -lGL -lpthread -lglut -lGLEW
+GL_FLAG        	= -lSDL -lSDL_image -lSDL_ttf -lGLU -lGL -lpthread
 OBJ_GL         	= $(SRC_GL:.cpp=.o)
 
 LDFLAGS         += -ldl
-CXXFLAGS        += -fPIC -Wall -Werror -Werror -Wextra
+CXXFLAGS        += -fPIC #-Wall -Werror -Werror -Wextra
 
 CXX             = g++
 
