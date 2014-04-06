@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 //
 // Started on  Mon Mar 10 15:06:57 2014 ribeaud antonin
-// Last update Sun Apr  6 13:56:07 2014 ribeaud antonin
+// Last update Sun Apr  6 14:55:04 2014 ribeaud antonin
 //
 
 #include "snake.hpp"
@@ -143,7 +143,7 @@ void	        Snake::apply_surface(int x, int y, const State &state) const
 {
   static	int blink = -1;
 
-  wmove(window, y, x+1);
+  wmove(window, y+1, x+1);
   if (state == 14)
     waddch(window, 'O');
   else if (state == 15)

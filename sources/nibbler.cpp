@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Sun Apr  6 13:21:46 2014 ribeaud antonin
+// Last update Sun Apr  6 14:57:25 2014 ribeaud antonin
 //
 
 #include <error.h>
@@ -176,7 +176,7 @@ void    Nibbler::putNewFood()
 {
   bool freePos[this->width * this->height];
   int  test;
-  int	test2;
+  int  test2;
 
   std::list<Pos>::iterator it = this->pos.begin();
   if ((*it).state == 15 && _addop == 0)
